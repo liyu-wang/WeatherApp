@@ -41,20 +41,20 @@ extension Weather {
 }
 
 extension Weather {
-    convenience init(from weatherData: WeatherData) {
+    convenience init(from weatherServiceData: WeatherServiceData) {
         self.init()
-        id = weatherData.id
-        name = weatherData.name
-        country = weatherData.sys.country
-        latitude = weatherData.coord.lat
-        longitude = weatherData.coord.lon
-        dateTime = Date(timeIntervalSince1970: TimeInterval(weatherData.dt))
-        condition = weatherData.weather.main
-        iconStr = weatherData.weather.icon
-        temperature = weatherData.main.temp
-        tempMin = weatherData.main.tempMin
-        tempMax = weatherData.main.tempMax
-        humidity = weatherData.main.humidity
+        id = weatherServiceData.id
+        name = weatherServiceData.name
+        country = weatherServiceData.sys.country
+        latitude = weatherServiceData.coord.lat
+        longitude = weatherServiceData.coord.lon
+        dateTime = Date(timeIntervalSince1970: TimeInterval(weatherServiceData.dt))
+        condition = weatherServiceData.weather.first?.main ?? ""
+        iconStr = weatherServiceData.weather.first?.icon ?? ""
+        temperature = weatherServiceData.main.temp
+        tempMin = weatherServiceData.main.tempMin
+        tempMax = weatherServiceData.main.tempMax
+        humidity = weatherServiceData.main.humidity
         timestamp = Date()
     }
 }

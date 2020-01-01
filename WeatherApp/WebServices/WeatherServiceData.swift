@@ -8,13 +8,13 @@
 
 import Foundation
 
-struct WeatherData: Decodable {
+struct WeatherServiceData: Decodable {
     let id: Int
     let name: String
     let dt: Int
     let sys: SysInfo
     let coord: Coordinators
-    let weather: Weather
+    let weather: [Weather]
     let main: MainInfo
 
     struct SysInfo: Decodable {
@@ -44,4 +44,9 @@ struct WeatherData: Decodable {
             case humidity
         }
     }
+}
+
+struct WeatherServiceErrorMessage: Decodable {
+    let cod: String
+    let message: String
 }
