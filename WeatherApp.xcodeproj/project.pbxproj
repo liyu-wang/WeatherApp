@@ -19,6 +19,8 @@
 		72DF9DBD23BC596C00DE9042 /* WeatherServiceData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72DF9DBC23BC596C00DE9042 /* WeatherServiceData.swift */; };
 		72DF9DBF23BC5C9B00DE9042 /* WeatherServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72DF9DBE23BC5C9B00DE9042 /* WeatherServiceTests.swift */; };
 		72DF9DC123BC66C200DE9042 /* WebServiceError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72DF9DC023BC66C200DE9042 /* WebServiceError.swift */; };
+		72DF9DC423BD3A8500DE9042 /* WeatherStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72DF9DC323BD3A8500DE9042 /* WeatherStore.swift */; };
+		72DF9DC623BDB12900DE9042 /* WeatherStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72DF9DC523BDB12900DE9042 /* WeatherStoreTests.swift */; };
 		8AF3EA3D2C8A03231C6FB3C4 /* Pods_WeatherAppTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CDF2D8392E7BC5A2900D623B /* Pods_WeatherAppTests.framework */; };
 		B57FA1771D6041FA01854E2C /* Pods_WeatherApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EC0037EFA97D6BA25FF374B /* Pods_WeatherApp.framework */; };
 /* End PBXBuildFile section */
@@ -53,6 +55,8 @@
 		72DF9DBC23BC596C00DE9042 /* WeatherServiceData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherServiceData.swift; sourceTree = "<group>"; };
 		72DF9DBE23BC5C9B00DE9042 /* WeatherServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherServiceTests.swift; sourceTree = "<group>"; };
 		72DF9DC023BC66C200DE9042 /* WebServiceError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebServiceError.swift; sourceTree = "<group>"; };
+		72DF9DC323BD3A8500DE9042 /* WeatherStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherStore.swift; sourceTree = "<group>"; };
+		72DF9DC523BDB12900DE9042 /* WeatherStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherStoreTests.swift; sourceTree = "<group>"; };
 		C33B9EC88055703C2C306918 /* Pods-WeatherAppTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WeatherAppTests.release.xcconfig"; path = "Target Support Files/Pods-WeatherAppTests/Pods-WeatherAppTests.release.xcconfig"; sourceTree = "<group>"; };
 		C50291950C7BBBA17DE6399A /* Pods-WeatherApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WeatherApp.release.xcconfig"; path = "Target Support Files/Pods-WeatherApp/Pods-WeatherApp.release.xcconfig"; sourceTree = "<group>"; };
 		CDF2D8392E7BC5A2900D623B /* Pods_WeatherAppTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WeatherAppTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -112,6 +116,7 @@
 		72DF9D9023BB307400DE9042 /* WeatherApp */ = {
 			isa = PBXGroup;
 			children = (
+				72DF9DC223BD3A6200DE9042 /* Stores */,
 				72DF9DB923BBF8E200DE9042 /* WebServices */,
 				72DF9DB423BB50BB00DE9042 /* Models */,
 				72DF9D9123BB307400DE9042 /* AppDelegate.swift */,
@@ -131,6 +136,7 @@
 				72DF9DA823BB307600DE9042 /* WeatherAppTests.swift */,
 				72DF9DAA23BB307600DE9042 /* Info.plist */,
 				72DF9DBE23BC5C9B00DE9042 /* WeatherServiceTests.swift */,
+				72DF9DC523BDB12900DE9042 /* WeatherStoreTests.swift */,
 			);
 			path = WeatherAppTests;
 			sourceTree = "<group>";
@@ -151,6 +157,14 @@
 				72DF9DC023BC66C200DE9042 /* WebServiceError.swift */,
 			);
 			path = WebServices;
+			sourceTree = "<group>";
+		};
+		72DF9DC223BD3A6200DE9042 /* Stores */ = {
+			isa = PBXGroup;
+			children = (
+				72DF9DC323BD3A8500DE9042 /* WeatherStore.swift */,
+			);
+			path = Stores;
 			sourceTree = "<group>";
 		};
 		F756693D6E8433CC33F0E0EB /* Frameworks */ = {
@@ -350,6 +364,7 @@
 			files = (
 				72DF9DB823BB51CE00DE9042 /* Weather.swift in Sources */,
 				72DF9D9623BB307400DE9042 /* ViewController.swift in Sources */,
+				72DF9DC423BD3A8500DE9042 /* WeatherStore.swift in Sources */,
 				72DF9DBB23BBF90100DE9042 /* WeatherService.swift in Sources */,
 				72DF9D9223BB307400DE9042 /* AppDelegate.swift in Sources */,
 				72DF9DBD23BC596C00DE9042 /* WeatherServiceData.swift in Sources */,
@@ -364,6 +379,7 @@
 			files = (
 				72DF9DBF23BC5C9B00DE9042 /* WeatherServiceTests.swift in Sources */,
 				72DF9DA923BB307600DE9042 /* WeatherAppTests.swift in Sources */,
+				72DF9DC623BDB12900DE9042 /* WeatherStoreTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
