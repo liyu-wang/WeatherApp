@@ -52,21 +52,24 @@ class WeatherStoreTests: XCTestCase {
     func testFetchAll() throws {
         insertTestWeathers()
 
-        let allWeathers = try weatherStore.fetchAll().toBlocking().first()
+        let allWeathers = try weatherStore.fetchAll()
+            .toBlocking()
+            .first()
+        
         XCTAssert(allWeathers?.count == 2, "Expected to get an array of 2 weathers, but got \(String(describing: allWeathers?.count)) weather(s) back.")
     }
 
-    func testFetchMostRecent() {
+    func testFindById() {
         insertTestWeathers()
 
-        let result = weatherStore.fetchMostRecent()
-        .toBlocking()
-        .materialize()
+        let result = weatherStore.find(by: 1851632)
+            .toBlocking()
+            .materialize()
 
         switch result {
         case .completed(let elements):
             XCTAssert(elements.count == 1, "Expected to get 1 wearther observable back, but got \(elements.count) back.")
-            XCTAssert(elements.first??.name == "Shuzenji", "Expected to get weather for Shuzenji back")
+            XCTAssert(elements.first?.name == "Shuzenji", "Expected to get weather for Shuzenji back")
         case .failed(_, let error):
             XCTFail("Expected to get a weather back, but received \(error).")
         }

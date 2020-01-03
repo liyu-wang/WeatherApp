@@ -22,8 +22,10 @@
 		72DF9DC423BD3A8500DE9042 /* WeatherStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72DF9DC323BD3A8500DE9042 /* WeatherStore.swift */; };
 		72DF9DC623BDB12900DE9042 /* WeatherStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72DF9DC523BDB12900DE9042 /* WeatherStoreTests.swift */; };
 		72DF9DC923BDC76A00DE9042 /* RealmManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72DF9DC823BDC76A00DE9042 /* RealmManager.swift */; };
+		72DF9DCB23BFE8C900DE9042 /* UserDefaultsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72DF9DCA23BFE8C900DE9042 /* UserDefaultsManager.swift */; };
 		87FDEBB023BEC4D0005C4CAD /* WeatherRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87FDEBAF23BEC4D0005C4CAD /* WeatherRepository.swift */; };
 		87FDEBB223BEFAC0005C4CAD /* WeatherRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87FDEBB123BEFAC0005C4CAD /* WeatherRepositoryTests.swift */; };
+		87FDEBB423BF0D72005C4CAD /* WeatherStoreError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87FDEBB323BF0D72005C4CAD /* WeatherStoreError.swift */; };
 		8AF3EA3D2C8A03231C6FB3C4 /* Pods_WeatherAppTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CDF2D8392E7BC5A2900D623B /* Pods_WeatherAppTests.framework */; };
 		B57FA1771D6041FA01854E2C /* Pods_WeatherApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EC0037EFA97D6BA25FF374B /* Pods_WeatherApp.framework */; };
 /* End PBXBuildFile section */
@@ -61,8 +63,10 @@
 		72DF9DC323BD3A8500DE9042 /* WeatherStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherStore.swift; sourceTree = "<group>"; };
 		72DF9DC523BDB12900DE9042 /* WeatherStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherStoreTests.swift; sourceTree = "<group>"; };
 		72DF9DC823BDC76A00DE9042 /* RealmManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmManager.swift; sourceTree = "<group>"; };
+		72DF9DCA23BFE8C900DE9042 /* UserDefaultsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsManager.swift; sourceTree = "<group>"; };
 		87FDEBAF23BEC4D0005C4CAD /* WeatherRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherRepository.swift; sourceTree = "<group>"; };
 		87FDEBB123BEFAC0005C4CAD /* WeatherRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherRepositoryTests.swift; sourceTree = "<group>"; };
+		87FDEBB323BF0D72005C4CAD /* WeatherStoreError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherStoreError.swift; sourceTree = "<group>"; };
 		C33B9EC88055703C2C306918 /* Pods-WeatherAppTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WeatherAppTests.release.xcconfig"; path = "Target Support Files/Pods-WeatherAppTests/Pods-WeatherAppTests.release.xcconfig"; sourceTree = "<group>"; };
 		C50291950C7BBBA17DE6399A /* Pods-WeatherApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WeatherApp.release.xcconfig"; path = "Target Support Files/Pods-WeatherApp/Pods-WeatherApp.release.xcconfig"; sourceTree = "<group>"; };
 		CDF2D8392E7BC5A2900D623B /* Pods_WeatherAppTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WeatherAppTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -172,6 +176,7 @@
 			isa = PBXGroup;
 			children = (
 				72DF9DC323BD3A8500DE9042 /* WeatherStore.swift */,
+				87FDEBB323BF0D72005C4CAD /* WeatherStoreError.swift */,
 			);
 			path = Stores;
 			sourceTree = "<group>";
@@ -180,6 +185,7 @@
 			isa = PBXGroup;
 			children = (
 				72DF9DC823BDC76A00DE9042 /* RealmManager.swift */,
+				72DF9DCA23BFE8C900DE9042 /* UserDefaultsManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -389,10 +395,12 @@
 			files = (
 				72DF9DB823BB51CE00DE9042 /* Weather.swift in Sources */,
 				72DF9D9623BB307400DE9042 /* ViewController.swift in Sources */,
+				72DF9DCB23BFE8C900DE9042 /* UserDefaultsManager.swift in Sources */,
 				87FDEBB023BEC4D0005C4CAD /* WeatherRepository.swift in Sources */,
 				72DF9DC423BD3A8500DE9042 /* WeatherStore.swift in Sources */,
 				72DF9DBB23BBF90100DE9042 /* WeatherService.swift in Sources */,
 				72DF9D9223BB307400DE9042 /* AppDelegate.swift in Sources */,
+				87FDEBB423BF0D72005C4CAD /* WeatherStoreError.swift in Sources */,
 				72DF9DC923BDC76A00DE9042 /* RealmManager.swift in Sources */,
 				72DF9DBD23BC596C00DE9042 /* WeatherServiceData.swift in Sources */,
 				72DF9D9423BB307400DE9042 /* SceneDelegate.swift in Sources */,
