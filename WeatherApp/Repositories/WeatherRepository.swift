@@ -11,10 +11,10 @@ import RxSwift
 
 protocol WeatherRepositoryType {
     func fetchWeather(byCityName name: String) -> Observable<Weather>
-    func fetchWeather(byZip zip: String) -> Observable<Weather>
+    func fetchWeather(byZip zip: String, countryCode: String) -> Observable<Weather>
     func fetchWeather(byLatitude latitude: Double, longitude: Double) -> Observable<Weather>
-    func fetchAllWeathers() -> Observable<[Weather]>
-    func fetchMostRecentWeather() -> Observable<Weather?>
+    func fetchWeather(byId id: Int) -> Observable<Weather>
+    func fetchAllLocalWeathers() -> Observable<[Weather]>
 }
 
 struct WeatherRepository: WeatherRepositoryType {
@@ -27,22 +27,44 @@ struct WeatherRepository: WeatherRepositoryType {
     }
 
     func fetchWeather(byCityName name: String) -> Observable<Weather> {
-        return Observable.just(Weather())
+        return weatherService.fetchWeather(byCityName: name)
+            .do(
+                onNext: { weather in
+                    self.weatherStore.addOrUpdate(weather: weather)
+                }
+            )
     }
 
-    func fetchWeather(byZip zip: String) -> Observable<Weather> {
-        return Observable.just(Weather())
+    func fetchWeather(byZip zip: String, countryCode: String) -> Observable<Weather> {
+        return weatherService.fetchWeather(byZip: zip, countryCode: countryCode)
+            .do(
+                onNext: { weather in
+                    self.weatherStore.addOrUpdate(weather: weather)
+                }
+            )
     }
 
     func fetchWeather(byLatitude latitude: Double, longitude: Double) -> Observable<Weather> {
-        return Observable.just(Weather())
+        return weatherService.fetchWeather(byLatitude: latitude, longitude: longitude)
+            .do(
+                onNext: { weather in
+                    self.weatherStore.addOrUpdate(weather: weather)
+                }
+            )
     }
 
-    func fetchAllWeathers() -> Observable<[Weather]> {
-        return Observable.just([])
+    func fetchWeather(byId id: Int) -> Observable<Weather> {
+        let localFetch = Observable.merge(weatherStore.find(by: id))
+        let remoteFetch = weatherService.fetchWeather(byId: id)
+            .do(
+                onNext: { weather in
+                    self.weatherStore.addOrUpdate(weather: weather)
+                }
+            )
+        return Observable.merge(localFetch, remoteFetch)
     }
 
-    func fetchMostRecentWeather() -> Observable<Weather?> {
-        return Observable.just(nil)
+    func fetchAllLocalWeathers() -> Observable<[Weather]> {
+        return weatherStore.fetchAll()
     }
 }

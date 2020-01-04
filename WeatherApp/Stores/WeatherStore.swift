@@ -15,6 +15,7 @@ protocol WeatherStoreType {
     func fetchAll() -> Observable<[Weather]>
     func find(by id: Int) -> Observable<Weather>
     func add(weather: Weather)
+    func addOrUpdate(weather: Weather)
     func update(weather: Weather)
     func delete(weather: Weather)
 }
@@ -35,6 +36,12 @@ struct WeatherStore: WeatherStoreType {
     }
 
     func add(weather: Weather) {
+        RealmManager.write { realm in
+            realm.add(weather)
+        }
+    }
+
+    func addOrUpdate(weather: Weather) {
         RealmManager.write { realm in
             realm.add(weather)
         }
