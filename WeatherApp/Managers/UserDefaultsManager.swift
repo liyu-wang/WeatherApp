@@ -12,13 +12,20 @@ private struct Constants {
     static let key = "most-recent-weather-id"
 }
 
-struct UserDefaultsManager {
-    static func saveMostRecentWeahter(id: Int) {
+protocol UserDefaultsManagerType {
+    func saveMostRecentWeahter(id: Int)
+    func loadMostRecentWeatherId() -> Int?
+}
+
+struct UserDefaultsManager: UserDefaultsManagerType {
+    static let shared = UserDefaultsManager()
+
+    func saveMostRecentWeahter(id: Int) {
         let defaults = UserDefaults.standard
         defaults.set(id, forKey: Constants.key)
     }
 
-    static func loadMostRecentWeatherId() -> Int? {
+    func loadMostRecentWeatherId() -> Int? {
         let defaults = UserDefaults.standard
         let id = defaults.integer(forKey: Constants.key)
         return id == 0 ? nil : id

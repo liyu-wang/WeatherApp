@@ -7,13 +7,19 @@
 //
 
 import XCTest
+import RxSwift
+import RxTest
 @testable import WeatherApp
 
 class WeatherListViewModelTests: XCTestCase {
+    private var bag: DisposeBag!
+    private var scheduler: TestScheduler!
     var viewModel: WeatherListViewModel!
 
     override func setUp() {
         viewModel = WeatherListViewModel(repository: MockWeatherRepository())
+        bag = DisposeBag()
+        scheduler = TestScheduler(initialClock: 0)
         super.setUp()
     }
 
@@ -23,6 +29,32 @@ class WeatherListViewModelTests: XCTestCase {
     }
 
     func testFetchAllLocalWeathers() {
-        XCTFail("Not implemented.")
+        let weathersObserver = scheduler.createObserver([Weather].self)
+        viewModel.weatherListDrive
+            .drive(weathersObserver)
+            .disposed(by: bag)
+        scheduler.start()
+
+        // fetchAllLocalWeathers() get called in WeatherListViewModel's init
+
+        XCTAssertRecordedElements(weathersObserver.events, [[
+            TestDataSet.localWeatherLondon,
+            TestDataSet.localWeatherShuzenji
+        ]])
+    }
+
+    func testDeleteWeather() {
+        let weathersObserver = scheduler.createObserver([Weather].self)
+        viewModel.weatherListDrive
+            .drive(weathersObserver)
+            .disposed(by: bag)
+        scheduler.start()
+
+        viewModel.delete(weather: TestDataSet.localWeatherShuzenji)
+
+        XCTAssertRecordedElements(weathersObserver.events, [
+            [TestDataSet.localWeatherLondon, TestDataSet.localWeatherShuzenji],
+            [TestDataSet.localWeatherLondon]
+        ])
     }
 }

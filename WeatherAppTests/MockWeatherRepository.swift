@@ -8,30 +8,47 @@
 
 import Foundation
 import RxSwift
+import RxCocoa
 @testable import WeatherApp
 
 class MockWeatherRepository: WeatherRepositoryType {
-    func fetchWeather(byCityName name: String) -> Observable<Weather> {
-        return Observable.just(Weather())
-    }
+    private var localWeatherArray: [Weather] = [
+        TestDataSet.localWeatherLondon,
+        TestDataSet.localWeatherShuzenji
+    ]
+    private var weathers: BehaviorRelay<[Weather]>
 
-    func fetchWeather(byZip zip: String, countryCode: String) -> Observable<Weather> {
-        return Observable.just(Weather())
-    }
-
-    func fetchWeather(byLatitude latitude: Double, longitude: Double) -> Observable<Weather> {
-        return Observable.just(Weather())
-    }
-
-    func fetchWeather(byId id: Int) -> Observable<Weather> {
-        return Observable.just(Weather())
+    init() {
+        self.weathers = BehaviorRelay(value: localWeatherArray)
     }
 
     func fetchAllLocalWeathers() -> Observable<[Weather]> {
-        return Observable.just([])
+        return weathers.asObservable()
     }
 
     func delete(weather: Weather) -> Observable<Void> {
+        guard let i = localWeatherArray.firstIndex(of: weather) else {
+            return Observable.error(WeatherStoreError.weatherWithSpecifiedIdNotExist(id: weather.id))
+        }
+        localWeatherArray.remove(at: i)
+        weathers.accept(localWeatherArray)
         return Observable.just(())
+    }
+
+    func fetchWeather(byCityName name: String) -> Observable<Weather> {
+        return Observable.just(TestDataSet.remoteWeatherLondon)
+    }
+
+    func fetchWeather(byZip zip: String, countryCode: String) -> Observable<Weather> {
+        return Observable.just(TestDataSet.remoteWeatherLondon)
+    }
+
+    func fetchWeather(byLatitude latitude: Double, longitude: Double) -> Observable<Weather> {
+        return Observable.just(TestDataSet.remoteWeatherLondon)
+    }
+
+    func fetchWeather(byId id: Int) -> Observable<Weather> {
+        guard id == TestDataSet.localWeatherLondon.id else { return Observable.error(WeatherStoreError.weatherWithSpecifiedIdNotExist(id: id)) }
+        return Observable.from([TestDataSet.localWeatherLondon, TestDataSet.remoteWeatherLondon])
     }
 }

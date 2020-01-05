@@ -17,17 +17,21 @@ struct WeatherListViewModel {
     private let weatherList: BehaviorRelay<[Weather]>
 
     private let repository: WeatherRepositoryType
+    private let bag = DisposeBag()
 
     init(repository: WeatherRepositoryType = WeatherRepository()) {
         self.repository = repository
         weatherList = BehaviorRelay(value: [])
+        fetchAllLocalWeathers()
     }
 
     func fetchAllLocalWeathers() {
-
+        repository.fetchAllLocalWeathers()
+            .bind(to: weatherList)
+            .disposed(by: bag)
     }
 
     func delete(weather: Weather) {
-
+        repository.delete(weather: weather)
     }
 }
