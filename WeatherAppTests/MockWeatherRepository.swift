@@ -10,7 +10,7 @@ import Foundation
 import RxSwift
 @testable import WeatherApp
 
- class MockWeatherRepository: WeatherRepositoryType {
+class MockWeatherRepository: WeatherRepositoryType {
     func fetchWeather(byCityName name: String) -> Observable<Weather> {
         return Observable.just(Weather())
     }
@@ -29,5 +29,9 @@ import RxSwift
 
     func fetchAllLocalWeathers() -> Observable<[Weather]> {
         return Observable.just([])
+    }
+
+    func delete(weather: Weather) -> Observable<Void> {
+        return Observable.just(())
     }
 }

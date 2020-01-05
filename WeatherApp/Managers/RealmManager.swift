@@ -8,6 +8,7 @@
 
 import Foundation
 import RealmSwift
+import RxSwift
 
 typealias RealmWriteBlock = (_ realm: Realm) -> Void
 
@@ -44,13 +45,16 @@ extension RealmManager {
         }
     }
 
-    public static func write(with realm: Realm? = RealmManager.realm, _ block: RealmWriteBlock) {
+    @discardableResult
+    public static func write(with realm: Realm? = RealmManager.realm, _ block: RealmWriteBlock) -> Observable<Void> {
         do {
             try realm?.write {
                 block(realm!)
             }
+            return Observable.just(())
         } catch {
             debugPrint("Could not write to database: %@", error)
+            return Observable.error(WeatherStoreError.failedToWriteDB(error: error))
         }
     }
 }

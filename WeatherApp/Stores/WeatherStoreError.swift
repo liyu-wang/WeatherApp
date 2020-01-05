@@ -10,6 +10,7 @@ import Foundation
 
 enum WeatherStoreError: Error {
     case failedToInitDBInstance
+    case failedToWriteDB(error: Error)
     case weatherWithSpecifiedIdNotExist(id: Int)
 }
 
@@ -18,6 +19,8 @@ extension WeatherStoreError: LocalizedError {
         switch self {
         case .failedToInitDBInstance:
             return "Failed to init db instance."
+        case .failedToWriteDB(let error):
+            return "Failed to write db with error: \(error.localizedDescription)"
         case .weatherWithSpecifiedIdNotExist(let id):
             return "Weather[\(id)] doesn't exist."
         }

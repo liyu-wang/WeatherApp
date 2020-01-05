@@ -15,6 +15,8 @@ protocol WeatherRepositoryType {
     func fetchWeather(byLatitude latitude: Double, longitude: Double) -> Observable<Weather>
     func fetchWeather(byId id: Int) -> Observable<Weather>
     func fetchAllLocalWeathers() -> Observable<[Weather]>
+    @discardableResult
+    func delete(weather: Weather) -> Observable<Void>
 }
 
 struct WeatherRepository: WeatherRepositoryType {
@@ -66,5 +68,9 @@ struct WeatherRepository: WeatherRepositoryType {
 
     func fetchAllLocalWeathers() -> Observable<[Weather]> {
         return weatherStore.fetchAll()
+    }
+
+    func delete(weather: Weather) -> Observable<Void> {
+        return weatherStore.delete(weather: weather)
     }
 }

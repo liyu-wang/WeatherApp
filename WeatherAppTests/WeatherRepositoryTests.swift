@@ -154,23 +154,29 @@ private class MockWeatherStore: WeatherStoreType {
         return Observable.just(w)
     }
 
-    func add(weather: Weather) {
+    @discardableResult
+    func add(weather: Weather) -> Observable<Void> {
         dict[weather.id] = weather
+        return Observable.just(())
     }
 
-    func addOrUpdate(weather: Weather) {
+    func addOrUpdate(weather: Weather) -> Observable<Void> {
         guard let w = dict[weather.id] else {
             add(weather: weather)
-            return
+            return Observable.just(())
         }
         update(weather: w)
+        return Observable.just(())
     }
 
-    func update(weather: Weather) {
+    @discardableResult
+    func update(weather: Weather) -> Observable<Void> {
         NSLog("%@ udpated local weather with: \(weather)", #function)
+        return Observable.just(())
     }
 
-    func delete(weather: Weather) {
+    func delete(weather: Weather) -> Observable<Void> {
         NSLog("%@ deleted weather: \(weather)", #function)
+        return Observable.just(())
     }
 }

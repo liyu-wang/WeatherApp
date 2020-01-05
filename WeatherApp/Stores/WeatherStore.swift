@@ -14,10 +14,14 @@ import RxRealm
 protocol WeatherStoreType {
     func fetchAll() -> Observable<[Weather]>
     func find(by id: Int) -> Observable<Weather>
-    func add(weather: Weather)
-    func addOrUpdate(weather: Weather)
-    func update(weather: Weather)
-    func delete(weather: Weather)
+    @discardableResult
+    func add(weather: Weather) -> Observable<Void>
+    @discardableResult
+    func addOrUpdate(weather: Weather) -> Observable<Void>
+    @discardableResult
+    func update(weather: Weather) -> Observable<Void>
+    @discardableResult
+    func delete(weather: Weather) -> Observable<Void>
 }
 
 struct WeatherStore: WeatherStoreType {
@@ -35,26 +39,26 @@ struct WeatherStore: WeatherStoreType {
         return Observable.just(weather)
     }
 
-    func add(weather: Weather) {
-        RealmManager.write { realm in
+    func add(weather: Weather) -> Observable<Void> {
+        return RealmManager.write { realm in
             realm.add(weather)
         }
     }
 
-    func addOrUpdate(weather: Weather) {
-        RealmManager.write { realm in
+    func addOrUpdate(weather: Weather) -> Observable<Void> {
+        return RealmManager.write { realm in
             realm.add(weather)
         }
     }
 
-    func update(weather: Weather) {
-        RealmManager.write { realm in
+    func update(weather: Weather) -> Observable<Void> {
+        return RealmManager.write { realm in
             realm.add(weather, update: .modified)
         }
     }
 
-    func delete(weather: Weather) {
-        RealmManager.write { realm in
+    func delete(weather: Weather) -> Observable<Void> {
+        return RealmManager.write { realm in
             realm.delete(weather)
         }
     }
