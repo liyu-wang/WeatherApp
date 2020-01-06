@@ -41,7 +41,7 @@ class WeatherViewModelTests: XCTestCase {
 
         viewModel.fetchWeather(byCityName: "London")
 
-        XCTAssertRecordedElements(weatherObserver.events, [nil, TestDataSet.remoteWeatherLondon])
+        XCTAssertRecordedElements(weatherObserver.events, [Weather.emptyWeather, TestDataSet.remoteWeatherLondon])
     }
 
     func testFetchWeatherByZip() {
@@ -58,7 +58,7 @@ class WeatherViewModelTests: XCTestCase {
 
         viewModel.fetchWeather(byZip: "CA91016", country: "UK")
 
-        XCTAssertRecordedElements(weatherObserver.events, [nil, TestDataSet.remoteWeatherLondon])
+        XCTAssertRecordedElements(weatherObserver.events, [Weather.emptyWeather, TestDataSet.remoteWeatherLondon])
     }
 
     func testMostRecentWeather() {
@@ -75,7 +75,7 @@ class WeatherViewModelTests: XCTestCase {
 
         viewModel.fetchMostRecentWeather()
 
-        XCTAssertRecordedElements(weatherObserver.events, [nil, TestDataSet.localWeatherLondon, TestDataSet.remoteWeatherLondon])
+        XCTAssertRecordedElements(weatherObserver.events, [Weather.emptyWeather, TestDataSet.localWeatherLondon, TestDataSet.remoteWeatherLondon])
     }
 }
 

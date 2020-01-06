@@ -60,12 +60,8 @@ extension Weather {
 }
 
 extension Weather {
-    var isEmptyWeather: Bool {
-        return id == 0
-    }
-
-    static var emptyWeather: Weather {
-        let weatherData = WeatherServiceData(id: 0, name: "City Name", dt: 1577971310, sys: WeatherServiceData.SysInfo(country: "Country"), coord: WeatherServiceData.Coordinators(lon: -0.13, lat: 51.51), weather: [WeatherServiceData.Weather(main: "N/A", icon: "04d")], main: WeatherServiceData.MainInfo(temp: 0, tempMin: 0, tempMax: 0, humidity: 0))
+    static let emptyWeather: Weather = {
+        let weatherData = WeatherServiceData(id: 0, name: "City Name", dt: 1577971310, sys: WeatherServiceData.SysInfo(country: "Country"), coord: WeatherServiceData.Coordinators(lon: 0, lat: 0), weather: [WeatherServiceData.Weather(main: "N/A", icon: "04d")], main: WeatherServiceData.MainInfo(temp: 0, tempMin: 0, tempMax: 0, humidity: 0))
         return Weather(from: weatherData)
-    }
+    }()
 }

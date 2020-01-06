@@ -100,7 +100,7 @@ private extension WeatherViewController {
             .drive(
                 onNext: { [weak self] weather in
                     guard let self = self else { return }
-                    if weather.isEmptyWeather {
+                    if weather == Weather.emptyWeather {
                         self.updateTimeLabel.text = "n/a"
                     } else {
                         let dateFormatter = DateFormatter()
