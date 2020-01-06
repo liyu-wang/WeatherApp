@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 import Kingfisher
 
-class WeatherViewController: UIViewController {
+class WeatherViewController: BaseViewController {
     @IBOutlet weak var searchField: UITextField!
     @IBOutlet weak var locationSearchButton: UIButton!
     @IBOutlet weak var cityNameLabel: UILabel!
@@ -56,9 +56,7 @@ private extension WeatherViewController {
             .subscribe(
                 onNext: { [weak self] _ in
                     guard let self = self else { return }
-                    let storyboard = UIStoryboard(name: "Main", bundle: Bundle.main)
-                    guard let weatherListVC = storyboard.instantiateViewController(withIdentifier: "WeatherListViewController") as? WeatherListViewController
-                        else { return }
+                    let weatherListVC = WeatherListViewController.instantiate()
                     self.navigationController?.pushViewController(weatherListVC, animated: true)
                 }
             )

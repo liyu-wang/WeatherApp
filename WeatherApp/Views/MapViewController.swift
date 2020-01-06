@@ -11,7 +11,7 @@ import MapKit
 import RxSwift
 import RxCocoa
 
-class MapViewController: UIViewController {
+class MapViewController: BaseViewController {
     @IBOutlet weak var mapView: MKMapView!
 
     var viewModel: MapViewModel!

@@ -10,7 +10,6 @@ import Foundation
 
 import Foundation
 
-
 extension String {
     func containsNumbers() -> Bool {
         guard rangeOfCharacter(from: .decimalDigits) != nil else {

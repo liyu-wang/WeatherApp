@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class WeatherListViewController: UIViewController {
+class WeatherListViewController: BaseViewController {
     @IBOutlet weak var tableView: UITableView!
 
     var viewModel: WeatherListViewModel = WeatherListViewModel()
@@ -52,9 +52,7 @@ private extension WeatherListViewController {
             .subscribe(
                 onNext: { [weak self] w in
                     guard let self = self else { return }
-                    let storyboard = UIStoryboard(name: "Main", bundle: Bundle.main)
-                    guard let mapVC = storyboard.instantiateViewController(withIdentifier: "MapViewController") as? MapViewController
-                        else { return }
+                    let mapVC = MapViewController.instantiate()
                     mapVC.viewModel = MapViewModel(weather: w)
                     self.navigationController?.pushViewController(mapVC, animated: true)
                 }
