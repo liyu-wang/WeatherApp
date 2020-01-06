@@ -11,8 +11,8 @@ import RxSwift
 import RxCocoa
 
 struct WeatherListViewModel {
-    var weatherListDrive: Driver<[Weather]> {
-        return weatherList.asDriver(onErrorJustReturn: [])
+    var weatherListObservable: Observable<[Weather]> {
+        return weatherList.asObservable()
     }
     private let weatherList: BehaviorRelay<[Weather]>
 

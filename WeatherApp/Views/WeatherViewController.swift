@@ -23,6 +23,7 @@ class WeatherViewController: UIViewController {
     @IBOutlet weak var humidityLabel: UILabel!
     @IBOutlet weak var updateTimeLabel: UILabel!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet weak var historyButton: UIBarButtonItem!
 
     private let bag = DisposeBag()
     private var viewModel: WeatherViewModel! = WeatherViewModel()
@@ -46,6 +47,18 @@ private extension WeatherViewController {
             .subscribe(
                 onNext: { [weak self] error in
                     self?.showAlert(for: error)
+                }
+            )
+            .disposed(by: bag)
+
+        historyButton.rx.tap
+            .subscribe(
+                onNext: { [weak self] _ in
+                    guard let self = self else { return }
+                    let storyboard = UIStoryboard(name: "Main", bundle: Bundle.main)
+                    guard let weatherListVC = storyboard.instantiateViewController(withIdentifier: "WeatherListViewController") as? WeatherListViewController
+                        else { return }
+                    self.navigationController?.pushViewController(weatherListVC, animated: true)
                 }
             )
             .disposed(by: bag)

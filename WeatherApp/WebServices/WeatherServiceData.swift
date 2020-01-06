@@ -49,4 +49,20 @@ struct WeatherServiceData: Decodable {
 struct WeatherServiceErrorMessage: Decodable {
     let cod: String
     let message: String
+
+    private enum CodingKeys: String, CodingKey {
+        case cod
+        case message
+    }
+
+    init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        do {
+            cod = try values.decode(String.self, forKey: .cod)
+        } catch {
+            let code = try values.decode(Int.self, forKey: .cod)
+            cod = "\(code)"
+        }
+        message = try values.decode(String.self, forKey: .message)
+    }
 }
