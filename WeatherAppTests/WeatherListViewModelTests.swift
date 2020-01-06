@@ -30,8 +30,8 @@ class WeatherListViewModelTests: XCTestCase {
 
     func testFetchAllLocalWeathers() {
         let weathersObserver = scheduler.createObserver([Weather].self)
-        viewModel.weatherListDrive
-            .drive(weathersObserver)
+        viewModel.weatherListObservable
+            .subscribe(weathersObserver)
             .disposed(by: bag)
         scheduler.start()
 
@@ -45,8 +45,8 @@ class WeatherListViewModelTests: XCTestCase {
 
     func testDeleteWeather() {
         let weathersObserver = scheduler.createObserver([Weather].self)
-        viewModel.weatherListDrive
-            .drive(weathersObserver)
+        viewModel.weatherListObservable
+            .subscribe(weathersObserver)
             .disposed(by: bag)
         scheduler.start()
 
