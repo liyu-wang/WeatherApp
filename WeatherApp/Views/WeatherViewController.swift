@@ -30,6 +30,7 @@ class WeatherViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         doBinding()
+        viewModel.fetchMostRecentWeather()
     }
 }
 

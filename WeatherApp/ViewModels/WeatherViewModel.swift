@@ -70,6 +70,7 @@ struct WeatherViewModel {
             .subscribe(
                 onNext: { weather in
                     self.weather.accept(weather)
+                    self.userDefaultsManager.saveMostRecentWeahter(id: weather.id)
                 },
                 onError: { error in
                     self.error.accept(error)
@@ -87,6 +88,7 @@ struct WeatherViewModel {
             .subscribe(
                 onNext: { weather in
                     self.weather.accept(weather)
+                    self.userDefaultsManager.saveMostRecentWeahter(id: weather.id)
                 },
                 onError: { error in
                     self.error.accept(error)
@@ -104,8 +106,19 @@ struct WeatherViewModel {
 
     func fetchMostRecentWeather() {
         guard let wId = userDefaultsManager.loadMostRecentWeatherId() else { return }
+        isLoading.accept(true)
         repository.fetchWeather(byId: wId)
-            .bind(to: weather)
+            .subscribe(
+                onNext: { weather in
+                    self.weather.accept(weather)
+                },
+                onError: { error in
+                    self.error.accept(error)
+                },
+                onDisposed: {
+                    self.isLoading.accept(false)
+                }
+            )
             .disposed(by: bag)
     }
 }
