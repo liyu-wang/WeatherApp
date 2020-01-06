@@ -23,6 +23,12 @@ class WeatherListViewController: BaseViewController {
         doBinding()
         viewModel.fetchAllLocalWeathers()
     }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        guard let indexPath = tableView.indexPathForSelectedRow else { return }
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
 }
 
 private extension WeatherListViewController {

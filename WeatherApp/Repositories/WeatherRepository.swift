@@ -59,7 +59,10 @@ struct WeatherRepository: WeatherRepositoryType {
     }
 
     func fetchWeather(byId id: Int) -> Observable<Weather> {
-        let localFetch = Observable.merge(weatherStore.find(by: id))
+        let localFetch = weatherStore.find(by: id)
+            .catchError { err -> Observable<Weather> in
+                return Observable.just(Weather.emptyWeather)
+            }
         let remoteFetch = weatherService.fetchWeather(byId: id)
             .observeOn(MainScheduler.instance)
             .do(
