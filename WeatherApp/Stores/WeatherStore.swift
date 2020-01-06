@@ -47,7 +47,7 @@ struct WeatherStore: WeatherStoreType {
 
     func addOrUpdate(weather: Weather) -> Observable<Void> {
         return RealmManager.write { realm in
-            realm.add(weather)
+            realm.add(weather, update: .modified)
         }
     }
 

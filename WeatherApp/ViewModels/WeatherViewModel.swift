@@ -10,11 +10,16 @@ import Foundation
 import RxSwift
 import RxCocoa
 
+private struct Constants {
+    static let zipFormatSeparator = ","
+    static let defaultCountryCode = "AU"
+}
+
 struct WeatherViewModel {
-    var weatherDrive: Driver<Weather?> {
-        return weather.asDriver(onErrorJustReturn: nil)
+    var weatherDrive: Driver<Weather> {
+        return weather.asDriver(onErrorJustReturn: Weather.emptyWeather)
     }
-    private let weather: BehaviorRelay<Weather?>
+    private let weather: BehaviorRelay<Weather>
 
     private let repository: WeatherRepositoryType
     private let userDefaultsManager: UserDefaultsManagerType
@@ -23,7 +28,30 @@ struct WeatherViewModel {
     init(repository: WeatherRepositoryType = WeatherRepository(), userDefaultsManager: UserDefaultsManagerType = UserDefaultsManager.shared) {
         self.repository = repository
         self.userDefaultsManager = userDefaultsManager
-        weather = BehaviorRelay(value: nil)
+        weather = BehaviorRelay(value: Weather.emptyWeather)
+    }
+
+    func fetchWeather(text: String) {
+        if text.containsNumbers() {
+            let array = text.components(separatedBy: Constants.zipFormatSeparator)
+            guard array.count > 0, array.count <= 2 else {
+                // pop format error
+                return
+            }
+            switch array.count {
+            case 1:
+                let countryCode = Locale.current.regionCode ?? Constants.defaultCountryCode
+                fetchWeather(byZip: array[0].trimed(),
+                             country: countryCode)
+            case 2:
+                fetchWeather(byZip: array[0].trimed(),
+                             country: array[1].trimed())
+            default:
+                fatalError()
+            }
+        } else {
+            fetchWeather(byCityName: text)
+        }
     }
 
     func fetchWeather(byCityName name: String) {

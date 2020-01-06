@@ -30,6 +30,7 @@ struct WeatherRepository: WeatherRepositoryType {
 
     func fetchWeather(byCityName name: String) -> Observable<Weather> {
         return weatherService.fetchWeather(byCityName: name)
+            .observeOn(MainScheduler.instance)
             .do(
                 onNext: { weather in
                     self.weatherStore.addOrUpdate(weather: weather)
@@ -39,6 +40,7 @@ struct WeatherRepository: WeatherRepositoryType {
 
     func fetchWeather(byZip zip: String, countryCode: String) -> Observable<Weather> {
         return weatherService.fetchWeather(byZip: zip, countryCode: countryCode)
+            .observeOn(MainScheduler.instance)
             .do(
                 onNext: { weather in
                     self.weatherStore.addOrUpdate(weather: weather)
@@ -48,6 +50,7 @@ struct WeatherRepository: WeatherRepositoryType {
 
     func fetchWeather(byLatitude latitude: Double, longitude: Double) -> Observable<Weather> {
         return weatherService.fetchWeather(byLatitude: latitude, longitude: longitude)
+            .observeOn(MainScheduler.instance)
             .do(
                 onNext: { weather in
                     self.weatherStore.addOrUpdate(weather: weather)
@@ -58,6 +61,7 @@ struct WeatherRepository: WeatherRepositoryType {
     func fetchWeather(byId id: Int) -> Observable<Weather> {
         let localFetch = Observable.merge(weatherStore.find(by: id))
         let remoteFetch = weatherService.fetchWeather(byId: id)
+            .observeOn(MainScheduler.instance)
             .do(
                 onNext: { weather in
                     self.weatherStore.addOrUpdate(weather: weather)
