@@ -25,8 +25,9 @@ class WeatherViewController: UIViewController {
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var historyButton: UIBarButtonItem!
 
+    var viewModel: WeatherViewModel! = WeatherViewModel()
+
     private let bag = DisposeBag()
-    private var viewModel: WeatherViewModel! = WeatherViewModel()
 
     override func viewDidLoad() {
         super.viewDidLoad()

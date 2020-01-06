@@ -13,7 +13,8 @@ import RxCocoa
 class WeatherListViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
 
-    private var viewModel: WeatherListViewModel = WeatherListViewModel()
+    var viewModel: WeatherListViewModel = WeatherListViewModel()
+
     private let bag = DisposeBag()
 
     override func viewDidLoad() {
@@ -33,19 +34,33 @@ private extension WeatherListViewController {
     }
 
     func doBinding() {
-        self.viewModel.weatherListObservable
+        viewModel.weatherListObservable
             .bind(to: tableView.rx.items(cellIdentifier: "WeatherTableViewCell", cellType: UITableViewCell.self)) { (row, weather, cell) in
                 cell.textLabel?.text = weather.name
             }
             .disposed(by: bag)
 
-        self.tableView.rx.modelDeleted(Weather.self)
+        tableView.rx.modelDeleted(Weather.self)
             .subscribe(
                 onNext: { [weak self] w in
                     self?.viewModel.delete(weather: w)
                 }
             )
             .disposed(by: bag)
+
+        tableView.rx.modelSelected(Weather.self)
+            .subscribe(
+                onNext: { [weak self] w in
+                    guard let self = self else { return }
+                    let storyboard = UIStoryboard(name: "Main", bundle: Bundle.main)
+                    guard let mapVC = storyboard.instantiateViewController(withIdentifier: "MapViewController") as? MapViewController
+                        else { return }
+                    mapVC.viewModel = MapViewModel(weather: w)
+                    self.navigationController?.pushViewController(mapVC, animated: true)
+                }
+            )
+            .disposed(by: bag)
+
     }
 }
 

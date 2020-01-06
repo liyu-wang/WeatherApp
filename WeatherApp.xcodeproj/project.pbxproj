@@ -29,6 +29,8 @@
 		72DF9DD723C0DCA200DE9042 /* TestDataSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72DF9DD623C0DCA200DE9042 /* TestDataSet.swift */; };
 		72DF9DDB23C1E8AA00DE9042 /* WeatherViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72DF9DDA23C1E8AA00DE9042 /* WeatherViewController.swift */; };
 		72DF9DDD23C1E8C700DE9042 /* WeatherListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72DF9DDC23C1E8C700DE9042 /* WeatherListViewController.swift */; };
+		72FF8DCA23C35C6C00396C89 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72FF8DC923C35C6C00396C89 /* MapViewController.swift */; };
+		72FF8DCC23C35D9300396C89 /* MapViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72FF8DCB23C35D9300396C89 /* MapViewModel.swift */; };
 		87FDEBB023BEC4D0005C4CAD /* WeatherRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87FDEBAF23BEC4D0005C4CAD /* WeatherRepository.swift */; };
 		87FDEBB223BEFAC0005C4CAD /* WeatherRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87FDEBB123BEFAC0005C4CAD /* WeatherRepositoryTests.swift */; };
 		87FDEBB423BF0D72005C4CAD /* WeatherStoreError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87FDEBB323BF0D72005C4CAD /* WeatherStoreError.swift */; };
@@ -80,6 +82,8 @@
 		72DF9DD623C0DCA200DE9042 /* TestDataSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestDataSet.swift; sourceTree = "<group>"; };
 		72DF9DDA23C1E8AA00DE9042 /* WeatherViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherViewController.swift; sourceTree = "<group>"; };
 		72DF9DDC23C1E8C700DE9042 /* WeatherListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherListViewController.swift; sourceTree = "<group>"; };
+		72FF8DC923C35C6C00396C89 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
+		72FF8DCB23C35D9300396C89 /* MapViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewModel.swift; sourceTree = "<group>"; };
 		87FDEBAF23BEC4D0005C4CAD /* WeatherRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherRepository.swift; sourceTree = "<group>"; };
 		87FDEBB123BEFAC0005C4CAD /* WeatherRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherRepositoryTests.swift; sourceTree = "<group>"; };
 		87FDEBB323BF0D72005C4CAD /* WeatherStoreError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherStoreError.swift; sourceTree = "<group>"; };
@@ -222,6 +226,7 @@
 			children = (
 				72DF9DCE23C0539600DE9042 /* WeatherViewModel.swift */,
 				72DF9DD023C053A300DE9042 /* WeatherListViewModel.swift */,
+				72FF8DCB23C35D9300396C89 /* MapViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -231,6 +236,7 @@
 			children = (
 				72DF9DDA23C1E8AA00DE9042 /* WeatherViewController.swift */,
 				72DF9DDC23C1E8C700DE9042 /* WeatherListViewController.swift */,
+				72FF8DC923C35C6C00396C89 /* MapViewController.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -455,9 +461,11 @@
 				72DF9DD123C053A300DE9042 /* WeatherListViewModel.swift in Sources */,
 				87FDEBBC23C2E2DD005C4CAD /* String+Extensions.swift in Sources */,
 				87FDEBBE23C2EFC8005C4CAD /* UIViewController+Extensions.swift in Sources */,
+				72FF8DCA23C35C6C00396C89 /* MapViewController.swift in Sources */,
 				72DF9DDD23C1E8C700DE9042 /* WeatherListViewController.swift in Sources */,
 				72DF9DCB23BFE8C900DE9042 /* UserDefaultsManager.swift in Sources */,
 				87FDEBB023BEC4D0005C4CAD /* WeatherRepository.swift in Sources */,
+				72FF8DCC23C35D9300396C89 /* MapViewModel.swift in Sources */,
 				72DF9DC423BD3A8500DE9042 /* WeatherStore.swift in Sources */,
 				72DF9DBB23BBF90100DE9042 /* WeatherService.swift in Sources */,
 				72DF9D9223BB307400DE9042 /* AppDelegate.swift in Sources */,

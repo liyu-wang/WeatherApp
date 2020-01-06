@@ -252,6 +252,35 @@
             </objects>
             <point key="canvasLocation" x="2224.6376811594205" y="391.74107142857139"/>
         </scene>
+        <!--Map View Controller-->
+        <scene sceneID="mAg-nC-sai">
+            <objects>
+                <viewController storyboardIdentifier="MapViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="ZoU-US-yfg" customClass="MapViewController" customModule="WeatherApp" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Sxq-pm-0Cq">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="tfo-Jq-gS7">
+                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                            </mapView>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="tfo-Jq-gS7" firstAttribute="leading" secondItem="kI4-FE-aYy" secondAttribute="leading" id="3Yl-Ac-iOG"/>
+                            <constraint firstItem="tfo-Jq-gS7" firstAttribute="top" secondItem="kI4-FE-aYy" secondAttribute="top" id="CHk-Ai-wdS"/>
+                            <constraint firstItem="kI4-FE-aYy" firstAttribute="bottom" secondItem="tfo-Jq-gS7" secondAttribute="bottom" id="M0y-jE-7Md"/>
+                            <constraint firstItem="kI4-FE-aYy" firstAttribute="trailing" secondItem="tfo-Jq-gS7" secondAttribute="trailing" id="mx1-3F-OaC"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="kI4-FE-aYy"/>
+                    </view>
+                    <connections>
+                        <outlet property="mapView" destination="tfo-Jq-gS7" id="rYm-zG-SNU"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="vrg-AC-geg" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3261" y="392"/>
+        </scene>
     </scenes>
     <resources>
         <image name="gps" width="32" height="32"/>
