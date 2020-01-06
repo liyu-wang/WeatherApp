@@ -51,11 +51,11 @@ struct WeatherViewModel {
             switch array.count {
             case 1:
                 let countryCode = Locale.current.regionCode ?? Constants.defaultCountryCode
-                fetchWeather(byZip: array[0].trimed(),
+                fetchWeather(byZip: array[0],
                              country: countryCode)
             case 2:
-                fetchWeather(byZip: array[0].trimed(),
-                             country: array[1].trimed())
+                fetchWeather(byZip: array[0],
+                             country: array[1])
             default:
                 fatalError()
             }
@@ -66,7 +66,7 @@ struct WeatherViewModel {
 
     func fetchWeather(byCityName name: String) {
         isLoading.accept(true)
-        repository.fetchWeather(byCityName: name)
+        repository.fetchWeather(byCityName: name.trimed())
             .subscribe(
                 onNext: { weather in
                     self.weather.accept(weather)
@@ -84,7 +84,7 @@ struct WeatherViewModel {
 
     func fetchWeather(byZip zip: String, country: String) {
         isLoading.accept(true)
-        repository.fetchWeather(byZip: zip, countryCode: country)
+        repository.fetchWeather(byZip: zip.trimed(), countryCode: country.trimed())
             .subscribe(
                 onNext: { weather in
                     self.weather.accept(weather)
@@ -101,7 +101,27 @@ struct WeatherViewModel {
     }
 
     func fetchWeatherByGPS() {
-
+        isLoading.accept(true)
+        LocationServiceManager.shared.fetchCurrentLocation()
+            .flatMapLatest { location in
+                return self.repository.fetchWeather(
+                    byLatitude: location.coordinate.latitude,
+                    longitude: location.coordinate.longitude
+                )
+            }
+            .subscribe(
+                onNext: { weather in
+                    self.weather.accept(weather)
+                    self.userDefaultsManager.saveMostRecentWeahter(id: weather.id)
+                },
+                onError: { error in
+                    self.error.accept(error)
+                },
+                onDisposed: {
+                    self.isLoading.accept(false)
+                }
+            )
+            .disposed(by: bag)
     }
 
     func fetchMostRecentWeather() {
