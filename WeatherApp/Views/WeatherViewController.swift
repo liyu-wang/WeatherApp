@@ -22,6 +22,7 @@ class WeatherViewController: UIViewController {
     @IBOutlet weak var maxTempLabel: UILabel!
     @IBOutlet weak var humidityLabel: UILabel!
     @IBOutlet weak var updateTimeLabel: UILabel!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
 
     private let bag = DisposeBag()
     private var viewModel: WeatherViewModel! = WeatherViewModel()
@@ -34,6 +35,20 @@ class WeatherViewController: UIViewController {
 
 private extension WeatherViewController {
     func doBinding() {
+        viewModel.isLoadingDriver
+            .map { !$0 }
+            .drive(activityIndicator.rx.isHidden)
+            .disposed(by: bag)
+
+        viewModel.errorObservable
+            .observeOn(MainScheduler.instance)
+            .subscribe(
+                onNext: { [weak self] error in
+                    self?.showAlert(for: error)
+                }
+            )
+            .disposed(by: bag)
+
         searchField.rx.controlEvent(.editingDidEndOnExit)
             .map { self.searchField.text ?? "" }
             .filter { !$0.isEmpty }

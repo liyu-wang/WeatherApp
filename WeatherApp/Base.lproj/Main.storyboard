@@ -50,6 +50,13 @@
                                         <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                         <textInputTraits key="textInputTraits" returnKeyType="search"/>
                                     </textField>
+                                    <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="d1K-9K-BeR">
+                                        <rect key="frame" x="195" y="63" width="25" height="25"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="25" id="EIW-BU-cxV"/>
+                                            <constraint firstAttribute="width" constant="25" id="FPC-dN-1RJ"/>
+                                        </constraints>
+                                    </activityIndicatorView>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <constraints>
@@ -58,7 +65,9 @@
                                     <constraint firstItem="Ri0-1g-PJy" firstAttribute="centerY" secondItem="PKp-Yx-B9m" secondAttribute="centerY" id="8J3-9l-yZ8"/>
                                     <constraint firstItem="Ri0-1g-PJy" firstAttribute="leading" secondItem="PKp-Yx-B9m" secondAttribute="trailing" constant="10" id="EL4-Yu-08I"/>
                                     <constraint firstAttribute="height" constant="80" id="Tub-eb-WbW"/>
+                                    <constraint firstItem="d1K-9K-BeR" firstAttribute="centerX" secondItem="fHl-io-AJE" secondAttribute="centerX" id="Z8A-we-Wyk"/>
                                     <constraint firstItem="PKp-Yx-B9m" firstAttribute="leading" secondItem="fHl-io-AJE" secondAttribute="leading" constant="20" id="sn8-Wt-jUw"/>
+                                    <constraint firstItem="d1K-9K-BeR" firstAttribute="top" secondItem="PKp-Yx-B9m" secondAttribute="bottom" constant="8" id="ugy-A6-5hX"/>
                                 </constraints>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="city name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rvx-zJ-BG1">
@@ -174,6 +183,7 @@
                     </view>
                     <navigationItem key="navigationItem" title="Weather" id="Uk1-9j-Uhh"/>
                     <connections>
+                        <outlet property="activityIndicator" destination="d1K-9K-BeR" id="mGP-59-vdS"/>
                         <outlet property="cityNameLabel" destination="rvx-zJ-BG1" id="VOG-Er-waQ"/>
                         <outlet property="conditionIcon" destination="TRw-3t-I3A" id="29Y-Q1-kv0"/>
                         <outlet property="conditionLabel" destination="WEG-2P-C4x" id="Lrd-4F-wVa"/>

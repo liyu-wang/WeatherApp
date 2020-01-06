@@ -16,18 +16,28 @@ private struct Constants {
 }
 
 struct WeatherViewModel {
-    var weatherDrive: Driver<Weather> {
-        return weather.asDriver(onErrorJustReturn: Weather.emptyWeather)
+    var isLoadingDriver: Driver<Bool> {
+        return isLoading.asDriver()
     }
+    var errorObservable: Observable<Error> {
+        return error.asObservable()
+    }
+    var weatherDrive: Driver<Weather> {
+        return weather.asDriver()
+    }
+    private let isLoading: BehaviorRelay<Bool>
+    private let error: PublishRelay<Error>
     private let weather: BehaviorRelay<Weather>
+    private let bag = DisposeBag()
 
     private let repository: WeatherRepositoryType
     private let userDefaultsManager: UserDefaultsManagerType
-    private let bag = DisposeBag()
 
     init(repository: WeatherRepositoryType = WeatherRepository(), userDefaultsManager: UserDefaultsManagerType = UserDefaultsManager.shared) {
         self.repository = repository
         self.userDefaultsManager = userDefaultsManager
+        error = PublishRelay()
+        isLoading = BehaviorRelay(value: false)
         weather = BehaviorRelay(value: Weather.emptyWeather)
     }
 
@@ -55,14 +65,36 @@ struct WeatherViewModel {
     }
 
     func fetchWeather(byCityName name: String) {
+        isLoading.accept(true)
         repository.fetchWeather(byCityName: name)
-            .bind(to: weather)
+            .subscribe(
+                onNext: { weather in
+                    self.weather.accept(weather)
+                },
+                onError: { error in
+                    self.error.accept(error)
+                },
+                onDisposed: {
+                    self.isLoading.accept(false)
+                }
+            )
             .disposed(by: bag)
     }
 
     func fetchWeather(byZip zip: String, country: String) {
+        isLoading.accept(true)
         repository.fetchWeather(byZip: zip, countryCode: country)
-            .bind(to: weather)
+            .subscribe(
+                onNext: { weather in
+                    self.weather.accept(weather)
+                },
+                onError: { error in
+                    self.error.accept(error)
+                },
+                onDisposed: {
+                    self.isLoading.accept(false)
+                }
+            )
             .disposed(by: bag)
     }
 
