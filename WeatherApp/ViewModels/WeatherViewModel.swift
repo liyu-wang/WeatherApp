@@ -125,9 +125,8 @@ struct WeatherViewModel {
     }
 
     func fetchMostRecentWeather() {
-        guard let wId = userDefaultsManager.loadMostRecentWeatherId() else { return }
         isLoading.accept(true)
-        repository.fetchWeather(byId: wId)
+        repository.fetchMostRecentWeather()
             .subscribe(
                 onNext: { weather in
                     self.weather.accept(weather)

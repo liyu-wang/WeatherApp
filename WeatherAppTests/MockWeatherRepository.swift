@@ -22,6 +22,10 @@ class MockWeatherRepository: WeatherRepositoryType {
         self.weathers = BehaviorRelay(value: localWeatherArray)
     }
 
+    func fetchMostRecentWeather() -> Observable<Weather> {
+        return Observable.from([TestDataSet.localWeatherLondon, TestDataSet.remoteWeatherLondon])
+    }
+
     func fetchAllLocalWeathers() -> Observable<[Weather]> {
         return weathers.asObservable()
     }
@@ -47,8 +51,14 @@ class MockWeatherRepository: WeatherRepositoryType {
         return Observable.just(TestDataSet.remoteWeatherLondon)
     }
 
-    func fetchWeather(byId id: Int) -> Observable<Weather> {
+    func fetchWeather(byId id: Int, startWithLocalCopy: Bool) -> Observable<Weather> {
         guard id == TestDataSet.localWeatherLondon.id else { return Observable.error(WeatherStoreError.weatherWithSpecifiedIdNotExist(id: id)) }
-        return Observable.from([TestDataSet.localWeatherLondon, TestDataSet.remoteWeatherLondon])
+        guard startWithLocalCopy else {
+            return Observable.just(TestDataSet.remoteWeatherLondon)
+        }
+        return Observable.from([
+            TestDataSet.localWeatherLondon,
+            TestDataSet.remoteWeatherLondon
+        ])
     }
 }
