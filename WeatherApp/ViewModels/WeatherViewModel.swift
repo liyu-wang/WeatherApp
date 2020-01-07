@@ -31,11 +31,9 @@ struct WeatherViewModel {
     private let bag = DisposeBag()
 
     private let repository: WeatherRepositoryType
-    private let userDefaultsManager: UserDefaultsManagerType
 
-    init(repository: WeatherRepositoryType = WeatherRepository(), userDefaultsManager: UserDefaultsManagerType = UserDefaultsManager.shared) {
+    init(repository: WeatherRepositoryType = WeatherRepository()) {
         self.repository = repository
-        self.userDefaultsManager = userDefaultsManager
         error = PublishRelay()
         isLoading = BehaviorRelay(value: false)
         weather = BehaviorRelay(value: Weather.emptyWeather)
@@ -70,7 +68,6 @@ struct WeatherViewModel {
             .subscribe(
                 onNext: { weather in
                     self.weather.accept(weather)
-                    self.userDefaultsManager.saveMostRecentWeahter(id: weather.id)
                 },
                 onError: { error in
                     self.error.accept(error)
@@ -88,7 +85,6 @@ struct WeatherViewModel {
             .subscribe(
                 onNext: { weather in
                     self.weather.accept(weather)
-                    self.userDefaultsManager.saveMostRecentWeahter(id: weather.id)
                 },
                 onError: { error in
                     self.error.accept(error)
@@ -112,7 +108,6 @@ struct WeatherViewModel {
             .subscribe(
                 onNext: { weather in
                     self.weather.accept(weather)
-                    self.userDefaultsManager.saveMostRecentWeahter(id: weather.id)
                 },
                 onError: { error in
                     self.error.accept(error)
