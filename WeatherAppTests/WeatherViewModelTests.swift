@@ -28,10 +28,7 @@ class WeatherViewModelTests: XCTestCase {
     }
 
     func testFetchWeatherByName() {
-        viewModel = WeatherViewModel(
-            repository: MockWeatherRepository(),
-            userDefaultsManager: MockUserDefaultsManager()
-        )
+        viewModel = WeatherViewModel(repository: MockWeatherRepository())
 
         let weatherObserver = scheduler.createObserver(Weather?.self)
         viewModel.weatherDrive
@@ -45,10 +42,7 @@ class WeatherViewModelTests: XCTestCase {
     }
 
     func testFetchWeatherByZip() {
-        viewModel = WeatherViewModel(
-            repository: MockWeatherRepository(),
-            userDefaultsManager: MockUserDefaultsManager()
-        )
+        viewModel = WeatherViewModel(repository: MockWeatherRepository())
 
         let weatherObserver = scheduler.createObserver(Weather?.self)
         viewModel.weatherDrive
@@ -62,10 +56,7 @@ class WeatherViewModelTests: XCTestCase {
     }
 
     func testMostRecentWeather() {
-        viewModel = WeatherViewModel(
-            repository: MockWeatherRepository(),
-            userDefaultsManager: MockUserDefaultsManager(mostRecentWeatherId: TestDataSet.localWeatherLondon.id)
-        )
+        viewModel = WeatherViewModel(repository: MockWeatherRepository())
 
         let weatherObserver = scheduler.createObserver(Weather?.self)
         viewModel.weatherDrive
@@ -76,20 +67,5 @@ class WeatherViewModelTests: XCTestCase {
         viewModel.fetchMostRecentWeather()
 
         XCTAssertRecordedElements(weatherObserver.events, [Weather.emptyWeather, TestDataSet.localWeatherLondon, TestDataSet.remoteWeatherLondon])
-    }
-}
-
-private class MockUserDefaultsManager: UserDefaultsManagerType {
-    private let mostRecentWeatherId: Int?
-
-    init(mostRecentWeatherId: Int? = nil) {
-        self.mostRecentWeatherId = mostRecentWeatherId
-    }
-
-    func saveMostRecentWeahter(id: Int) {
-    }
-
-    func loadMostRecentWeatherId() -> Int? {
-        return mostRecentWeatherId
     }
 }

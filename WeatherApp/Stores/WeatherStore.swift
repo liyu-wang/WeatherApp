@@ -12,8 +12,9 @@ import RealmSwift
 import RxRealm
 
 protocol WeatherStoreType {
+    func fetchMostRecentWeather() -> Observable<Weather?>
     func fetchAll() -> Observable<[Weather]>
-    func find(by id: Int) -> Observable<Weather>
+    func find(by id: Int) -> Observable<Weather?>
     @discardableResult
     func add(weather: Weather) -> Observable<Void>
     @discardableResult
@@ -25,17 +26,21 @@ protocol WeatherStoreType {
 }
 
 struct WeatherStore: WeatherStoreType {
+    func fetchMostRecentWeather() -> Observable<Weather?> {
+        guard let realm = RealmManager.realm else { return Observable.error(WeatherStoreError.failedToInitDBInstance) }
+        let weather = realm.objects(Weather.self).sorted(byKeyPath: "timestamp", ascending: false).first
+        return Observable.just(weather)
+    }
+
     func fetchAll() -> Observable<[Weather]> {
         guard let realm = RealmManager.realm else { return Observable.error(WeatherStoreError.failedToInitDBInstance) }
         let result = realm.objects(Weather.self).sorted(byKeyPath: "timestamp", ascending: false)
         return Observable.array(from: result)
     }
 
-    func find(by id: Int) -> Observable<Weather> {
+    func find(by id: Int) -> Observable<Weather?> {
         guard let realm = RealmManager.realm else { return Observable.error(WeatherStoreError.failedToInitDBInstance) }
-        guard let weather = realm.object(ofType: Weather.self, forPrimaryKey: id) else {
-            return Observable.error(WeatherStoreError.weatherWithSpecifiedIdNotExist(id: id))
-        }
+        let weather = realm.object(ofType: Weather.self, forPrimaryKey: id)
         return Observable.just(weather)
     }
 

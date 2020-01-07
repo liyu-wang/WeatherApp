@@ -69,7 +69,7 @@ class WeatherStoreTests: XCTestCase {
         switch result {
         case .completed(let elements):
             XCTAssert(elements.count == 1, "Expected to get 1 wearther observable back, but got \(elements.count) back.")
-            XCTAssert(elements.first?.name == "Shuzenji", "Expected to get weather for Shuzenji back")
+            XCTAssert(elements.first??.name == "Shuzenji", "Expected to get weather for Shuzenji back")
         case .failed(_, let error):
             XCTFail("Expected to get a weather back, but received \(error).")
         }
