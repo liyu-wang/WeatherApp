@@ -10,10 +10,11 @@ import Foundation
 import RxSwift
 
 protocol WeatherRepositoryType {
+    func fetchMostRecentWeather() -> Observable<Weather>
     func fetchWeather(byCityName name: String) -> Observable<Weather>
     func fetchWeather(byZip zip: String, countryCode: String) -> Observable<Weather>
     func fetchWeather(byLatitude latitude: Double, longitude: Double) -> Observable<Weather>
-    func fetchWeather(byId id: Int) -> Observable<Weather>
+    func fetchWeather(byId id: Int, startWithLocalCopy: Bool) -> Observable<Weather>
     func fetchAllLocalWeathers() -> Observable<[Weather]>
     @discardableResult
     func delete(weather: Weather) -> Observable<Void>
@@ -26,6 +27,17 @@ struct WeatherRepository: WeatherRepositoryType {
     init(weatherService: WeatherServiceType = WeatherService(), weatherStore: WeatherStoreType = WeatherStore()) {
         self.weatherService = weatherService
         self.weatherStore = weatherStore
+    }
+
+    func fetchMostRecentWeather() -> Observable<Weather> {
+        return weatherStore.fetchMostRecentWeather()
+            .compactMap { $0 }
+            .flatMapLatest { weather -> Observable<Weather> in
+                return Observable.merge(
+                    Observable.just(weather),
+                    self.fetchWeather(byId: weather.id)
+                )
+            }
     }
 
     func fetchWeather(byCityName name: String) -> Observable<Weather> {
@@ -58,11 +70,9 @@ struct WeatherRepository: WeatherRepositoryType {
             )
     }
 
-    func fetchWeather(byId id: Int) -> Observable<Weather> {
+    func fetchWeather(byId id: Int, startWithLocalCopy: Bool = false) -> Observable<Weather> {
         let localFetch = weatherStore.find(by: id)
-            .catchError { err -> Observable<Weather> in
-                return Observable.just(Weather.emptyWeather)
-            }
+            .compactMap { $0 }
         let remoteFetch = weatherService.fetchWeather(byId: id)
             .observeOn(MainScheduler.instance)
             .do(
@@ -70,7 +80,11 @@ struct WeatherRepository: WeatherRepositoryType {
                     self.weatherStore.addOrUpdate(weather: weather)
                 }
             )
-        return Observable.merge(localFetch, remoteFetch)
+        if startWithLocalCopy {
+            return Observable.merge(localFetch, remoteFetch)
+        } else {
+            return remoteFetch
+        }
     }
 
     func fetchAllLocalWeathers() -> Observable<[Weather]> {

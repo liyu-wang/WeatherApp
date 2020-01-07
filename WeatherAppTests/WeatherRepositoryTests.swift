@@ -74,17 +74,27 @@ class WeatherRepositoryTests: XCTestCase {
         let localWeathers = try!weatherRepository.fetchAllLocalWeathers()
             .toBlocking()
             .toArray()
-        XCTAssert(localWeathers[0].count == 2, "Expected to get 3 local wearthers back, but got \(localWeathers[0].count) back.")
+        XCTAssert(localWeathers[0].count == 2, "Expected to get 2 local wearthers back, but got \(localWeathers[0].count) back.")
+    }
+
+    func testFetchMostRecentWeather() {
+        let mostRecentWeatherSequence = try! weatherRepository.fetchMostRecentWeather()
+            .toBlocking()
+            .toArray()
+
+        XCTAssert(mostRecentWeatherSequence.count == 2, "Expected to get 1 local weather and 1 remote wearther back, but got \(mostRecentWeatherSequence.count) back.")
+        XCTAssert(mostRecentWeatherSequence[0] == TestDataSet.localWeatherLondon, "Expected the first element to be the local london")
+        XCTAssert(mostRecentWeatherSequence[1] == TestDataSet.remoteWeatherLondon, "Expected the second element to be the remote london")
     }
 
     func testFetchWeatherById() {
-        var localWeathers = try!weatherRepository.fetchAllLocalWeathers()
+        var localWeathers = try! weatherRepository.fetchAllLocalWeathers()
             .toBlocking()
             .toArray()
         XCTAssert(localWeathers[0].count == 2, "Expected to get 2 local wearthers back, but got \(localWeathers[0].count) back.")
 
         // fetch weather does exist in local db
-        let weatherSequence = try!weatherRepository.fetchWeather(byId: 2643743)
+        let weatherSequence = try! weatherRepository.fetchWeather(byId: 2643743, startWithLocalCopy: true)
             .toBlocking()
             .toArray()
 
@@ -92,7 +102,7 @@ class WeatherRepositoryTests: XCTestCase {
 
         XCTAssert(weatherSequence[0].dateTime! < weatherSequence[1].dateTime!, "Expected to the remote wearther has large datetime than the local one")
 
-        localWeathers = try!weatherRepository.fetchAllLocalWeathers()
+        localWeathers = try! weatherRepository.fetchAllLocalWeathers()
             .toBlocking()
             .toArray()
         XCTAssert(localWeathers[0].count == 2, "Expected to get 2 local wearthers back, but got \(localWeathers[0].count) back.")
@@ -123,15 +133,16 @@ private class MockWeatherStore: WeatherStoreType {
         TestDataSet.localWeatherShuzenji.id: TestDataSet.localWeatherShuzenji
     ]
 
+    func fetchMostRecentWeather() -> Observable<Weather?> {
+        return Observable.just(TestDataSet.localWeatherLondon)
+    }
+
     func fetchAll() -> Observable<[Weather]> {
         return Observable.just(Array(dict.values))
     }
 
-    func find(by id: Int) -> Observable<Weather> {
-        guard let w = dict[id] else {
-            return Observable.error(WeatherStoreError.weatherWithSpecifiedIdNotExist(id: id))
-        }
-        return Observable.just(w)
+    func find(by id: Int) -> Observable<Weather?> {
+        return Observable.just(dict[id])
     }
 
     @discardableResult

@@ -21,7 +21,6 @@
 		72DF9DC423BD3A8500DE9042 /* WeatherStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72DF9DC323BD3A8500DE9042 /* WeatherStore.swift */; };
 		72DF9DC623BDB12900DE9042 /* WeatherStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72DF9DC523BDB12900DE9042 /* WeatherStoreTests.swift */; };
 		72DF9DC923BDC76A00DE9042 /* RealmManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72DF9DC823BDC76A00DE9042 /* RealmManager.swift */; };
-		72DF9DCB23BFE8C900DE9042 /* UserDefaultsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72DF9DCA23BFE8C900DE9042 /* UserDefaultsManager.swift */; };
 		72DF9DCF23C0539600DE9042 /* WeatherViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72DF9DCE23C0539600DE9042 /* WeatherViewModel.swift */; };
 		72DF9DD123C053A300DE9042 /* WeatherListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72DF9DD023C053A300DE9042 /* WeatherListViewModel.swift */; };
 		72DF9DD323C05AAB00DE9042 /* WeatherListViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72DF9DD223C05AAB00DE9042 /* WeatherListViewModelTests.swift */; };
@@ -75,7 +74,6 @@
 		72DF9DC323BD3A8500DE9042 /* WeatherStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherStore.swift; sourceTree = "<group>"; };
 		72DF9DC523BDB12900DE9042 /* WeatherStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherStoreTests.swift; sourceTree = "<group>"; };
 		72DF9DC823BDC76A00DE9042 /* RealmManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmManager.swift; sourceTree = "<group>"; };
-		72DF9DCA23BFE8C900DE9042 /* UserDefaultsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsManager.swift; sourceTree = "<group>"; };
 		72DF9DCE23C0539600DE9042 /* WeatherViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherViewModel.swift; sourceTree = "<group>"; };
 		72DF9DD023C053A300DE9042 /* WeatherListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherListViewModel.swift; sourceTree = "<group>"; };
 		72DF9DD223C05AAB00DE9042 /* WeatherListViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherListViewModelTests.swift; sourceTree = "<group>"; };
@@ -218,7 +216,6 @@
 			isa = PBXGroup;
 			children = (
 				72DF9DC823BDC76A00DE9042 /* RealmManager.swift */,
-				72DF9DCA23BFE8C900DE9042 /* UserDefaultsManager.swift */,
 				87FDEBBF23C3015D005C4CAD /* LocationServiceManager.swift */,
 			);
 			path = Managers;
@@ -475,7 +472,6 @@
 				87FDEBBE23C2EFC8005C4CAD /* UIViewController+Extensions.swift in Sources */,
 				72FF8DCA23C35C6C00396C89 /* MapViewController.swift in Sources */,
 				72DF9DDD23C1E8C700DE9042 /* WeatherListViewController.swift in Sources */,
-				72DF9DCB23BFE8C900DE9042 /* UserDefaultsManager.swift in Sources */,
 				87FDEBB023BEC4D0005C4CAD /* WeatherRepository.swift in Sources */,
 				72FF8DCC23C35D9300396C89 /* MapViewModel.swift in Sources */,
 				72DF9DC423BD3A8500DE9042 /* WeatherStore.swift in Sources */,
