@@ -19,37 +19,37 @@ struct WebServiceConstants {
 }
 
 protocol WeatherServiceType {
-    func fetchWeather(byCityName name: String) -> Observable<Weather>
-    func fetchWeather(byZip zip: String, countryCode: String) -> Observable<Weather>
-    func fetchWeather(byLatitude latitude: Double, longitude: Double) -> Observable<Weather>
-    func fetchWeather(byId id: Int) -> Observable<Weather>
+    func fetchWeather(byCityName name: String) -> Single<Weather>
+    func fetchWeather(byZip zip: String, countryCode: String) -> Single<Weather>
+    func fetchWeather(byLatitude latitude: Double, longitude: Double) -> Single<Weather>
+    func fetchWeather(byId id: Int) -> Single<Weather>
 }
 
 struct WeatherService: WeatherServiceType {
-    func fetchWeather(byCityName name: String) -> Observable<Weather> {
+    func fetchWeather(byCityName name: String) -> Single<Weather> {
         return fetchWeather(with: ["q": name])
     }
 
-    func fetchWeather(byZip zip: String, countryCode: String) -> Observable<Weather> {
+    func fetchWeather(byZip zip: String, countryCode: String) -> Single<Weather> {
         return fetchWeather(with: ["zip": "\(zip),\(countryCode)"])
     }
 
-    func fetchWeather(byLatitude latitude: Double, longitude: Double) -> Observable<Weather> {
+    func fetchWeather(byLatitude latitude: Double, longitude: Double) -> Single<Weather> {
         return fetchWeather(with: ["lat": latitude, "lon": longitude])
     }
 
-    func fetchWeather(byId id: Int) -> Observable<Weather> {
+    func fetchWeather(byId id: Int) -> Single<Weather> {
         return fetchWeather(with: ["id": id])
     }
 }
 
 private extension WeatherService {
-    func fetchWeather(with params: [String : Any]) -> Observable<Weather> {
+    func fetchWeather(with params: [String : Any]) -> Single<Weather> {
         let request: URLRequest
         do {
             request = try makeGetRequest(path: "weather", params: params)
         } catch {
-            return Observable.error(error)
+            return Single.error(error)
         }
         return URLSession.shared.rx.response(request: request)
             .debug("GET /weather")
@@ -70,6 +70,7 @@ private extension WeatherService {
                     throw WebServiceError.responseDecodingError(error: error)
                 }
             }
+            .asSingle()
     }
 
     func makeGetRequest(path: String, params: [String: Any]) throws -> URLRequest {

@@ -66,13 +66,12 @@ struct WeatherViewModel {
         isLoading.accept(true)
         repository.fetchWeather(byCityName: name.trimed())
             .subscribe(
-                onNext: { weather in
+                onSuccess: { weather in
                     self.weather.accept(weather)
+                    self.isLoading.accept(false)
                 },
                 onError: { error in
                     self.error.accept(error)
-                },
-                onDisposed: {
                     self.isLoading.accept(false)
                 }
             )
@@ -83,13 +82,12 @@ struct WeatherViewModel {
         isLoading.accept(true)
         repository.fetchWeather(byZip: zip.trimed(), countryCode: country.trimed())
             .subscribe(
-                onNext: { weather in
+                onSuccess: { weather in
                     self.weather.accept(weather)
+                    self.isLoading.accept(false)
                 },
                 onError: { error in
                     self.error.accept(error)
-                },
-                onDisposed: {
                     self.isLoading.accept(false)
                 }
             )

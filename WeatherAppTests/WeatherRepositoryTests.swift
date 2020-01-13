@@ -110,20 +110,20 @@ class WeatherRepositoryTests: XCTestCase {
 }
 
 private struct MockWeatherService: WeatherServiceType {
-    func fetchWeather(byCityName name: String) -> Observable<Weather> {
-        return Observable.just(TestDataSet.remoteWeatherMountainView)
+    func fetchWeather(byCityName name: String) -> Single<Weather> {
+        return Single.just(TestDataSet.remoteWeatherMountainView)
     }
 
-    func fetchWeather(byZip zip: String, countryCode: String) -> Observable<Weather> {
-        return Observable.just(TestDataSet.remoteWeatherMountainView)
+    func fetchWeather(byZip zip: String, countryCode: String) -> Single<Weather> {
+        return Single.just(TestDataSet.remoteWeatherMountainView)
     }
 
-    func fetchWeather(byLatitude latitude: Double, longitude: Double) -> Observable<Weather> {
-        return Observable.just(TestDataSet.remoteWeatherMountainView)
+    func fetchWeather(byLatitude latitude: Double, longitude: Double) -> Single<Weather> {
+        return Single.just(TestDataSet.remoteWeatherMountainView)
     }
 
-    func fetchWeather(byId id: Int) -> Observable<Weather> {
-        return Observable.just(TestDataSet.remoteWeatherLondon)
+    func fetchWeather(byId id: Int) -> Single<Weather> {
+        return Single.just(TestDataSet.remoteWeatherLondon)
     }
 }
 
