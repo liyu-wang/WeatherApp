@@ -12,9 +12,9 @@ import RealmSwift
 import RxRealm
 
 protocol WeatherStoreType {
-    func fetchMostRecentWeather() -> Observable<Weather?>
+    func fetchMostRecentWeather() -> Maybe<Weather>
     func fetchAll() -> Observable<[Weather]>
-    func find(by id: Int) -> Observable<Weather?>
+    func find(by id: Int) -> Maybe<Weather>
     @discardableResult
     func add(weather: Weather) -> Observable<Void>
     @discardableResult
@@ -26,10 +26,13 @@ protocol WeatherStoreType {
 }
 
 struct WeatherStore: WeatherStoreType {
-    func fetchMostRecentWeather() -> Observable<Weather?> {
-        guard let realm = RealmManager.realm else { return Observable.error(WeatherStoreError.failedToInitDBInstance) }
-        let weather = realm.objects(Weather.self).sorted(byKeyPath: "timestamp", ascending: false).first
-        return Observable.just(weather)
+    func fetchMostRecentWeather() -> Maybe<Weather> {
+        guard let realm = RealmManager.realm else { return Maybe.error(WeatherStoreError.failedToInitDBInstance) }
+        if let weather = realm.objects(Weather.self).sorted(byKeyPath: "timestamp", ascending: false).first {
+            return Maybe.just(weather)
+        } else {
+            return Maybe.empty()
+        }
     }
 
     func fetchAll() -> Observable<[Weather]> {
@@ -38,10 +41,13 @@ struct WeatherStore: WeatherStoreType {
         return Observable.array(from: result)
     }
 
-    func find(by id: Int) -> Observable<Weather?> {
-        guard let realm = RealmManager.realm else { return Observable.error(WeatherStoreError.failedToInitDBInstance) }
-        let weather = realm.object(ofType: Weather.self, forPrimaryKey: id)
-        return Observable.just(weather)
+    func find(by id: Int) -> Maybe<Weather> {
+        guard let realm = RealmManager.realm else { return Maybe.error(WeatherStoreError.failedToInitDBInstance) }
+        if let weather = realm.object(ofType: Weather.self, forPrimaryKey: id) {
+            return Maybe.just(weather)
+        } else {
+            return Maybe.empty()
+        }
     }
 
     func add(weather: Weather) -> Observable<Void> {

@@ -39,16 +39,16 @@ class MockWeatherRepository: WeatherRepositoryType {
         return Observable.just(())
     }
 
-    func fetchWeather(byCityName name: String) -> Observable<Weather> {
-        return Observable.just(TestDataSet.remoteWeatherLondon)
+    func fetchWeather(byCityName name: String) -> Single<Weather> {
+        return Single.just(TestDataSet.remoteWeatherLondon)
     }
 
-    func fetchWeather(byZip zip: String, countryCode: String) -> Observable<Weather> {
-        return Observable.just(TestDataSet.remoteWeatherLondon)
+    func fetchWeather(byZip zip: String, countryCode: String) -> Single<Weather> {
+        return Single.just(TestDataSet.remoteWeatherLondon)
     }
 
-    func fetchWeather(byLatitude latitude: Double, longitude: Double) -> Observable<Weather> {
-        return Observable.just(TestDataSet.remoteWeatherLondon)
+    func fetchWeather(byLatitude latitude: Double, longitude: Double) -> Single<Weather> {
+        return Single.just(TestDataSet.remoteWeatherLondon)
     }
 
     func fetchWeather(byId id: Int, startWithLocalCopy: Bool) -> Observable<Weather> {

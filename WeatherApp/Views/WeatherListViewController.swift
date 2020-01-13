@@ -42,7 +42,7 @@ private extension WeatherListViewController {
     func doBinding() {
         viewModel.weatherListObservable
             .bind(to: tableView.rx.items(cellIdentifier: "WeatherTableViewCell", cellType: UITableViewCell.self)) { (row, weather, cell) in
-                cell.textLabel?.text = weather.name
+                cell.textLabel?.text = "\(weather.name), \(weather.country)"
             }
             .disposed(by: bag)
 
