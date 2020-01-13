@@ -31,7 +31,7 @@ struct WeatherRepository: WeatherRepositoryType {
 
     func fetchMostRecentWeather() -> Observable<Weather> {
         return weatherStore.fetchMostRecentWeather()
-            .compactMap { $0 }
+            .asObservable()
             .flatMapLatest { weather -> Observable<Weather> in
                 return Observable.merge(
                     Observable.just(weather),
@@ -72,7 +72,7 @@ struct WeatherRepository: WeatherRepositoryType {
 
     func fetchWeather(byId id: Int, startWithLocalCopy: Bool = false) -> Observable<Weather> {
         let localFetch = weatherStore.find(by: id)
-            .compactMap { $0 }
+            .asObservable()
         let remoteFetch = weatherService.fetchWeather(byId: id)
             .observeOn(MainScheduler.instance)
             .do(

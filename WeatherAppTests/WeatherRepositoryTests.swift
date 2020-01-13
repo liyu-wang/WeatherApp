@@ -133,16 +133,20 @@ private class MockWeatherStore: WeatherStoreType {
         TestDataSet.localWeatherShuzenji.id: TestDataSet.localWeatherShuzenji
     ]
 
-    func fetchMostRecentWeather() -> Observable<Weather?> {
-        return Observable.just(TestDataSet.localWeatherLondon)
+    func fetchMostRecentWeather() -> Maybe<Weather> {
+        return Maybe.just(TestDataSet.localWeatherLondon)
     }
 
     func fetchAll() -> Observable<[Weather]> {
         return Observable.just(Array(dict.values))
     }
 
-    func find(by id: Int) -> Observable<Weather?> {
-        return Observable.just(dict[id])
+    func find(by id: Int) -> Maybe<Weather> {
+        if let w = dict[id] {
+            return Maybe.just(w)
+        } else {
+            return Maybe.empty()
+        }
     }
 
     @discardableResult
