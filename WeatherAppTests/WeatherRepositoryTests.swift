@@ -110,20 +110,20 @@ class WeatherRepositoryTests: XCTestCase {
 }
 
 private struct MockWeatherService: WeatherServiceType {
-    func fetchWeather(byCityName name: String) -> Observable<Weather> {
-        return Observable.just(TestDataSet.remoteWeatherMountainView)
+    func fetchWeather(byCityName name: String) -> Single<Weather> {
+        return Single.just(TestDataSet.remoteWeatherMountainView)
     }
 
-    func fetchWeather(byZip zip: String, countryCode: String) -> Observable<Weather> {
-        return Observable.just(TestDataSet.remoteWeatherMountainView)
+    func fetchWeather(byZip zip: String, countryCode: String) -> Single<Weather> {
+        return Single.just(TestDataSet.remoteWeatherMountainView)
     }
 
-    func fetchWeather(byLatitude latitude: Double, longitude: Double) -> Observable<Weather> {
-        return Observable.just(TestDataSet.remoteWeatherMountainView)
+    func fetchWeather(byLatitude latitude: Double, longitude: Double) -> Single<Weather> {
+        return Single.just(TestDataSet.remoteWeatherMountainView)
     }
 
-    func fetchWeather(byId id: Int) -> Observable<Weather> {
-        return Observable.just(TestDataSet.remoteWeatherLondon)
+    func fetchWeather(byId id: Int) -> Single<Weather> {
+        return Single.just(TestDataSet.remoteWeatherLondon)
     }
 }
 
@@ -133,16 +133,20 @@ private class MockWeatherStore: WeatherStoreType {
         TestDataSet.localWeatherShuzenji.id: TestDataSet.localWeatherShuzenji
     ]
 
-    func fetchMostRecentWeather() -> Observable<Weather?> {
-        return Observable.just(TestDataSet.localWeatherLondon)
+    func fetchMostRecentWeather() -> Maybe<Weather> {
+        return Maybe.just(TestDataSet.localWeatherLondon)
     }
 
     func fetchAll() -> Observable<[Weather]> {
         return Observable.just(Array(dict.values))
     }
 
-    func find(by id: Int) -> Observable<Weather?> {
-        return Observable.just(dict[id])
+    func find(by id: Int) -> Maybe<Weather> {
+        if let w = dict[id] {
+            return Maybe.just(w)
+        } else {
+            return Maybe.empty()
+        }
     }
 
     @discardableResult
