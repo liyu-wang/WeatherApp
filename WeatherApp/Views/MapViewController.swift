@@ -13,24 +13,14 @@ import RxCocoa
 
 class MapViewController: BaseViewController {
     @IBOutlet weak var mapView: MKMapView!
-
     var viewModel: MapViewModel!
-
     private let bag = DisposeBag()
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        configViews()
-        doBinding()
-    }
-}
-
-private extension MapViewController {
-    func configViews() {
+    override func configViews() {
         navigationItem.title = "Map"
     }
 
-    func doBinding() {
+    override func doBinding() {
         viewModel.weatherDriver
             .map { weather -> MKPointAnnotation in
                 let annotation = MKPointAnnotation()
@@ -48,7 +38,7 @@ private extension MapViewController {
             .disposed(by: bag)
     }
 
-    func showAnotationOnMap(_ annotation: MKPointAnnotation) {
+    private func showAnotationOnMap(_ annotation: MKPointAnnotation) {
         let region = MKCoordinateRegion(
             center: annotation.coordinate,
             latitudinalMeters: CLLocationDistance(exactly: 10000)!,

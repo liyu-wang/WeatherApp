@@ -31,13 +31,10 @@ class WeatherViewController: BaseViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        doBinding()
         viewModel.fetchMostRecentWeather()
     }
-}
 
-private extension WeatherViewController {
-    func doBinding() {
+    override func doBinding() {
         viewModel.isLoadingDriver
             .map { !$0 }
             .drive(activityIndicator.rx.isHidden)

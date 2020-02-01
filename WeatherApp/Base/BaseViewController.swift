@@ -23,5 +23,15 @@ extension Storyboarded where Self: UIViewController {
 class BaseViewController: UIViewController, Storyboarded {
     override func viewDidLoad() {
         super.viewDidLoad()
+        configViews()
+        doBinding()
+    }
+
+    func configViews() {
+
+    }
+
+    func doBinding() {
+
     }
 }

@@ -19,8 +19,6 @@ class WeatherListViewController: BaseViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        configViews()
-        doBinding()
         viewModel.fetchAllLocalWeathers()
     }
 
@@ -29,17 +27,15 @@ class WeatherListViewController: BaseViewController {
         guard let indexPath = tableView.indexPathForSelectedRow else { return }
         tableView.deselectRow(at: indexPath, animated: true)
     }
-}
 
-private extension WeatherListViewController {
-    func configViews() {
+    override func configViews() {
         navigationItem.title = "Recent Search"
         
         tableView.rx.setDelegate(self)
             .disposed(by: bag)
     }
 
-    func doBinding() {
+    override func doBinding() {
         viewModel.weatherListObservable
             .bind(to: tableView.rx.items(cellIdentifier: "WeatherTableViewCell", cellType: UITableViewCell.self)) { (row, weather, cell) in
                 cell.textLabel?.text = "\(weather.name), \(weather.country)"
@@ -64,7 +60,6 @@ private extension WeatherListViewController {
                 }
             )
             .disposed(by: bag)
-
     }
 }
 
