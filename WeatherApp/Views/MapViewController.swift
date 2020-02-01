@@ -11,16 +11,24 @@ import MapKit
 import RxSwift
 import RxCocoa
 
-class MapViewController: BaseViewController {
+class MapViewController: UIViewController {
     @IBOutlet weak var mapView: MKMapView!
     var viewModel: MapViewModel!
     private let bag = DisposeBag()
 
-    override func configViews() {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        configViews()
+        bindViews()
+    }
+}
+
+extension MapViewController: StoryboardedViewController {
+    func configViews() {
         navigationItem.title = "Map"
     }
 
-    override func doBinding() {
+    func bindViews() {
         viewModel.weatherDriver
             .map { weather -> MKPointAnnotation in
                 let annotation = MKPointAnnotation()
