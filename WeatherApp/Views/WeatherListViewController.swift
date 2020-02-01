@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class WeatherListViewController: BaseViewController {
+class WeatherListViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
 
     var viewModel: WeatherListViewModel = WeatherListViewModel()
@@ -19,6 +19,8 @@ class WeatherListViewController: BaseViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        configViews()
+        bindViews()
         viewModel.fetchAllLocalWeathers()
     }
 
@@ -27,15 +29,17 @@ class WeatherListViewController: BaseViewController {
         guard let indexPath = tableView.indexPathForSelectedRow else { return }
         tableView.deselectRow(at: indexPath, animated: true)
     }
+}
 
-    override func configViews() {
+extension WeatherListViewController: StoryboardedViewController {
+    func configViews() {
         navigationItem.title = "Recent Search"
         
         tableView.rx.setDelegate(self)
             .disposed(by: bag)
     }
 
-    override func doBinding() {
+    func bindViews() {
         viewModel.weatherListObservable
             .bind(to: tableView.rx.items(cellIdentifier: "WeatherTableViewCell", cellType: UITableViewCell.self)) { (row, weather, cell) in
                 cell.textLabel?.text = "\(weather.name), \(weather.country)"

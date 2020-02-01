@@ -1,8 +1,8 @@
 //
-//  BaseViewController.swift
+//  Protocols.swift
 //  WeatherApp
 //
-//  Created by Liyu Wang on 6/1/20.
+//  Created by Liyu Wang on 2/2/20.
 //  Copyright © 2020 Liyu Wang. All rights reserved.
 //
 
@@ -20,18 +20,21 @@ extension Storyboarded where Self: UIViewController {
     }
 }
 
-class BaseViewController: UIViewController, Storyboarded {
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        configViews()
-        doBinding()
-    }
-
-    func configViews() {
-
-    }
-
-    func doBinding() {
-
-    }
+protocol ViewConfigurable {
+    func configViews()
 }
+
+extension ViewConfigurable {
+    func configViews() {}
+}
+
+protocol ViewBindable {
+    func bindViews()
+}
+
+extension ViewBindable {
+    func bindViews() {}
+}
+
+typealias ViewController = ViewConfigurable & ViewBindable
+typealias StoryboardedViewController = Storyboarded & ViewController
