@@ -8,17 +8,11 @@
 
 import Foundation
 
-import Foundation
-
 extension String {
     func containsNumbers() -> Bool {
         guard rangeOfCharacter(from: .decimalDigits) != nil else {
             return false
         }
         return true
-    }
-
-    func trimed() -> String {
-        return trimmingCharacters(in: .whitespacesAndNewlines)
     }
 }

@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 import Kingfisher
 
-class WeatherViewController: BaseViewController {
+class WeatherViewController: UIViewController {
     @IBOutlet weak var searchField: UITextField!
     @IBOutlet weak var locationSearchButton: UIButton!
     @IBOutlet weak var cityNameLabel: UILabel!
@@ -31,13 +31,14 @@ class WeatherViewController: BaseViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        doBinding()
+        configViews()
+        bindViews()
         viewModel.fetchMostRecentWeather()
     }
 }
 
-private extension WeatherViewController {
-    func doBinding() {
+extension WeatherViewController: StoryboardedViewController {
+    func bindViews() {
         viewModel.isLoadingDriver
             .map { !$0 }
             .drive(activityIndicator.rx.isHidden)

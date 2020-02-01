@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class WeatherListViewController: BaseViewController {
+class WeatherListViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
 
     var viewModel: WeatherListViewModel = WeatherListViewModel()
@@ -20,7 +20,7 @@ class WeatherListViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configViews()
-        doBinding()
+        bindViews()
         viewModel.fetchAllLocalWeathers()
     }
 
@@ -31,7 +31,7 @@ class WeatherListViewController: BaseViewController {
     }
 }
 
-private extension WeatherListViewController {
+extension WeatherListViewController: StoryboardedViewController {
     func configViews() {
         navigationItem.title = "Recent Search"
         
@@ -39,7 +39,7 @@ private extension WeatherListViewController {
             .disposed(by: bag)
     }
 
-    func doBinding() {
+    func bindViews() {
         viewModel.weatherListObservable
             .bind(to: tableView.rx.items(cellIdentifier: "WeatherTableViewCell", cellType: UITableViewCell.self)) { (row, weather, cell) in
                 cell.textLabel?.text = "\(weather.name), \(weather.country)"
@@ -64,7 +64,6 @@ private extension WeatherListViewController {
                 }
             )
             .disposed(by: bag)
-
     }
 }
 
