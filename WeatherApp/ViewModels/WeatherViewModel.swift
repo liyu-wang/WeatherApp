@@ -32,7 +32,7 @@ struct WeatherViewModel {
 
     private let repository: WeatherRepositoryType
 
-    init(repository: WeatherRepositoryType = WeatherRepository()) {
+    init(repository: WeatherRepositoryType = WeatherRepository(weatherStore: RealmStore<Weather>())) {
         self.repository = repository
         error = PublishRelay()
         isLoading = BehaviorRelay(value: false)

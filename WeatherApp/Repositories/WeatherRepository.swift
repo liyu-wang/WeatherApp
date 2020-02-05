@@ -20,17 +20,17 @@ protocol WeatherRepositoryType {
     func delete(weather: Weather) -> Observable<Void>
 }
 
-struct WeatherRepository: WeatherRepositoryType {
+struct WeatherRepository<Store: AbstractStore>: WeatherRepositoryType where Store.Entity == Weather {
+    private let weatherStore: Store
     private let weatherService: WeatherServiceType
-    private let weatherStore: WeatherStoreType
 
-    init(weatherService: WeatherServiceType = WeatherService(), weatherStore: WeatherStoreType = WeatherStore()) {
-        self.weatherService = weatherService
+    init(weatherStore: Store, weatherService: WeatherServiceType = WeatherService()) {
         self.weatherStore = weatherStore
+        self.weatherService = weatherService
     }
 
     func fetchMostRecentWeather() -> Observable<Weather> {
-        return weatherStore.fetchMostRecentWeather()
+        return weatherStore.fetchMostRecentEntity()
             .asObservable()
             .flatMapLatest { weather -> Observable<Weather> in
                 return Observable.merge(
@@ -45,7 +45,7 @@ struct WeatherRepository: WeatherRepositoryType {
             .observeOn(MainScheduler.instance)
             .do(
                 onSuccess: { weather in
-                    self.weatherStore.addOrUpdate(weather: weather)
+                    self.weatherStore.addOrUpdate(entity: weather)
                 }
             )
     }
@@ -55,7 +55,7 @@ struct WeatherRepository: WeatherRepositoryType {
             .observeOn(MainScheduler.instance)
             .do(
                 onSuccess: { weather in
-                    self.weatherStore.addOrUpdate(weather: weather)
+                    self.weatherStore.addOrUpdate(entity: weather)
                 }
             )
     }
@@ -65,7 +65,7 @@ struct WeatherRepository: WeatherRepositoryType {
             .observeOn(MainScheduler.instance)
             .do(
                 onSuccess: { weather in
-                    self.weatherStore.addOrUpdate(weather: weather)
+                    self.weatherStore.addOrUpdate(entity: weather)
                 }
             )
     }
@@ -77,7 +77,7 @@ struct WeatherRepository: WeatherRepositoryType {
             .observeOn(MainScheduler.instance)
             .do(
                 onSuccess: { weather in
-                    self.weatherStore.addOrUpdate(weather: weather)
+                    self.weatherStore.addOrUpdate(entity: weather)
                 }
             )
         if startWithLocalCopy {
@@ -92,6 +92,6 @@ struct WeatherRepository: WeatherRepositoryType {
     }
 
     func delete(weather: Weather) -> Observable<Void> {
-        return weatherStore.delete(weather: weather)
+        return weatherStore.delete(entity: weather)
     }
 }

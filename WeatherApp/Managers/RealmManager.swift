@@ -54,7 +54,7 @@ extension RealmManager {
             return Observable.just(())
         } catch {
             debugPrint("Could not write to database: %@", error)
-            return Observable.error(WeatherStoreError.failedToWriteDB(error: error))
+            return Observable.error(StoreError.failedToWriteDB(error: error))
         }
     }
 }
