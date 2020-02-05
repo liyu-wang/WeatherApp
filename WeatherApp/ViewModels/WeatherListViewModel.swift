@@ -19,7 +19,7 @@ struct WeatherListViewModel {
     private let repository: WeatherRepositoryType
     private let bag = DisposeBag()
 
-    init(repository: WeatherRepositoryType = WeatherRepository()) {
+    init(repository: WeatherRepositoryType = WeatherRepository(weatherStore: RealmStore<Weather>())) {
         self.repository = repository
         weatherList = BehaviorRelay(value: [])
         fetchAllLocalWeathers()
