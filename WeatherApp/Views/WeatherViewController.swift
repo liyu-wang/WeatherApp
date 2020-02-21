@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 import Kingfisher
 
-class WeatherViewController: UIViewController {
+class WeatherViewController: UIViewController, ActivityIndicatable {
     @IBOutlet weak var searchField: UITextField!
     @IBOutlet weak var locationSearchButton: UIButton!
     @IBOutlet weak var cityNameLabel: UILabel!
@@ -25,33 +25,33 @@ class WeatherViewController: UIViewController {
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var historyButton: UIBarButtonItem!
 
-    var viewModel: WeatherViewModel! = WeatherViewModel()
+    var viewModel: WeatherViewModelType! = WeatherViewModel()
 
-    private let bag = DisposeBag()
+    let bag = DisposeBag()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        configViews()
         bindViews()
         viewModel.fetchMostRecentWeather()
     }
 }
 
-extension WeatherViewController: StoryboardedViewController {
-    func bindViews() {
-        viewModel.isLoadingDriver
-            .map { !$0 }
-            .drive(activityIndicator.rx.isHidden)
-            .disposed(by: bag)
+extension WeatherViewController: LoadingStatusObserver {
+    var loadingStatusEmitable: LoadingStatusEmitable {
+        viewModel
+    }
+}
 
-        viewModel.errorObservable
-            .observeOn(MainScheduler.instance)
-            .subscribe(
-                onNext: { [weak self] error in
-                    self?.showAlert(for: error)
-                }
-            )
-            .disposed(by: bag)
+extension WeatherViewController: ErrorObserver {
+    var errorEmitable: ErrorEmitable {
+        viewModel
+    }
+}
+
+private extension WeatherViewController {
+    func bindViews() {
+        bindLoadingStatus()
+        bindError()
 
         historyButton.rx.tap
             .subscribe(
@@ -82,7 +82,7 @@ extension WeatherViewController: StoryboardedViewController {
                 }
             ).disposed(by: bag)
 
-        let weatherDriver = viewModel.weatherDrive
+        let weatherDriver = viewModel.weatherDriver
 
         weatherDriver
             .map { "\($0.name), \($0.country)" }

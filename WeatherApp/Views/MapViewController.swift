@@ -13,7 +13,7 @@ import RxCocoa
 
 class MapViewController: UIViewController {
     @IBOutlet weak var mapView: MKMapView!
-    var viewModel: MapViewModel!
+    var viewModel: WeatherEmitable!
     private let bag = DisposeBag()
 
     override func viewDidLoad() {
@@ -23,7 +23,7 @@ class MapViewController: UIViewController {
     }
 }
 
-extension MapViewController: StoryboardedViewController {
+private extension MapViewController {
     func configViews() {
         navigationItem.title = "Map"
     }
