@@ -14,16 +14,16 @@ import RealmSwift
 import RxRealm
 @testable import WeatherApp
 
-class WeatherRepositoryTests: XCTestCase {
+class WeatherRepositoryTests<Store: AbstractStore>: XCTestCase where Store.Entity == Weather {
     var weatherService: WeatherServiceType!
-    var weatherStore: WeatherStoreType!
+    fileprivate var weatherStore: Store!
     var weatherRepository: WeatherRepositoryType!
 
     override func setUp() {
         super.setUp()
         weatherService = MockWeatherService()
-        weatherStore = MockWeatherStore()
-        weatherRepository = WeatherRepository(weatherService: weatherService, weatherStore: weatherStore)
+        weatherStore = MockWeatherStore() as? Store
+        weatherRepository = WeatherRepository(weatherStore: weatherStore, weatherService: weatherService)
     }
 
     override func tearDown() {
@@ -127,13 +127,13 @@ private struct MockWeatherService: WeatherServiceType {
     }
 }
 
-private class MockWeatherStore: WeatherStoreType {
+private class MockWeatherStore: AbstractStore {
     private var dict = [
         TestDataSet.localWeatherLondon.id : TestDataSet.localWeatherLondon,
         TestDataSet.localWeatherShuzenji.id: TestDataSet.localWeatherShuzenji
     ]
 
-    func fetchMostRecentWeather() -> Maybe<Weather> {
+    func fetchMostRecentEntity() -> Maybe<Weather> {
         return Maybe.just(TestDataSet.localWeatherLondon)
     }
 
@@ -150,28 +150,28 @@ private class MockWeatherStore: WeatherStoreType {
     }
 
     @discardableResult
-    func add(weather: Weather) -> Observable<Void> {
-        dict[weather.id] = weather
+    func add(entity: Weather) -> Observable<Void> {
+        dict[entity.id] = entity
         return Observable.just(())
     }
 
-    func addOrUpdate(weather: Weather) -> Observable<Void> {
-        guard let w = dict[weather.id] else {
-            add(weather: weather)
+    func addOrUpdate(entity: Weather) -> Observable<Void> {
+        guard let w = dict[entity.id] else {
+            add(entity: entity)
             return Observable.just(())
         }
-        update(weather: w)
+        update(entity: w)
         return Observable.just(())
     }
 
     @discardableResult
-    func update(weather: Weather) -> Observable<Void> {
-        NSLog("%@ udpated local weather with: \(weather)", #function)
+    func update(entity: Weather) -> Observable<Void> {
+        NSLog("%@ udpated local weather with: \(entity)", #function)
         return Observable.just(())
     }
 
-    func delete(weather: Weather) -> Observable<Void> {
-        NSLog("%@ deleted weather: \(weather)", #function)
+    func delete(entity: Weather) -> Observable<Void> {
+        NSLog("%@ deleted weather: \(entity)", #function)
         return Observable.just(())
     }
 }
