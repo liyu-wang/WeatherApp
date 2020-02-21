@@ -13,7 +13,7 @@ import RxCocoa
 class WeatherListViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
 
-    var viewModel: WeatherListViewModel = WeatherListViewModel()
+    var viewModel: WeatherListViewModelType! = WeatherListViewModel()
 
     private let bag = DisposeBag()
 
@@ -31,7 +31,7 @@ class WeatherListViewController: UIViewController {
     }
 }
 
-extension WeatherListViewController: StoryboardedViewController {
+private extension WeatherListViewController {
     func configViews() {
         navigationItem.title = "Recent Search"
         
