@@ -22,7 +22,10 @@ class MockWeatherRepository: WeatherRepositoryType {
         self.weathers = BehaviorRelay(value: localWeatherArray)
     }
 
-    func fetchMostRecentWeather() -> Observable<Weather> {
+    func fetchMostRecentWeather(skipLocal: Bool) -> Observable<Weather> {
+        if skipLocal {
+            return Observable.just(TestDataSet.remoteWeatherLondon)
+        }
         return Observable.from([TestDataSet.localWeatherLondon, TestDataSet.remoteWeatherLondon])
     }
 

@@ -10,7 +10,7 @@ import Foundation
 import RxSwift
 
 protocol WeatherRepositoryType {
-    func fetchMostRecentWeather() -> Observable<Weather>
+    func fetchMostRecentWeather(skipLocal: Bool) -> Observable<Weather>
     func fetchWeather(byCityName name: String) -> Single<Weather>
     func fetchWeather(byZip zip: String, countryCode: String) -> Single<Weather>
     func fetchWeather(byLatitude latitude: Double, longitude: Double) -> Single<Weather>
@@ -29,10 +29,13 @@ struct WeatherRepository<Store: AbstractStore>: WeatherRepositoryType where Stor
         self.weatherService = weatherService
     }
 
-    func fetchMostRecentWeather() -> Observable<Weather> {
+    func fetchMostRecentWeather(skipLocal: Bool) -> Observable<Weather> {
         return weatherStore.fetchMostRecentEntity()
             .asObservable()
             .flatMapLatest { weather -> Observable<Weather> in
+                if skipLocal {
+                    return self.fetchWeather(byId: weather.id)
+                }
                 return Observable.merge(
                     Observable.just(weather),
                     self.fetchWeather(byId: weather.id)

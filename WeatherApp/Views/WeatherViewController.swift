@@ -24,6 +24,7 @@ class WeatherViewController: UIViewController, ActivityIndicatable {
     @IBOutlet weak var updateTimeLabel: UILabel!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var historyButton: UIBarButtonItem!
+    @IBOutlet weak var refreshButton: UIBarButtonItem!
 
     var viewModel: WeatherViewModelType! = WeatherViewModel()
 
@@ -32,7 +33,7 @@ class WeatherViewController: UIViewController, ActivityIndicatable {
     override func viewDidLoad() {
         super.viewDidLoad()
         bindViews()
-        viewModel.fetchMostRecentWeather()
+        viewModel.fetchMostRecentWeather(skipLocal: false)
     }
 }
 
@@ -59,6 +60,15 @@ private extension WeatherViewController {
                     guard let self = self else { return }
                     let weatherListVC = WeatherListViewController.instantiate()
                     self.navigationController?.pushViewController(weatherListVC, animated: true)
+                }
+            )
+            .disposed(by: bag)
+
+        refreshButton.rx.tap
+            .subscribe(
+                onNext: { [weak self] _  in
+                    guard let self = self else { return }
+                    self.viewModel.fetchMostRecentWeather(skipLocal: true)
                 }
             )
             .disposed(by: bag)

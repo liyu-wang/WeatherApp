@@ -64,7 +64,7 @@ class WeatherViewModelTests: XCTestCase {
             .disposed(by: bag)
         scheduler.start()
 
-        viewModel.fetchMostRecentWeather()
+        viewModel.fetchMostRecentWeather(skipLocal: false)
 
         XCTAssertRecordedElements(weatherObserver.events, [Weather.emptyWeather, TestDataSet.localWeatherLondon, TestDataSet.remoteWeatherLondon])
     }

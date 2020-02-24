@@ -78,7 +78,7 @@ class WeatherRepositoryTests<Store: AbstractStore>: XCTestCase where Store.Entit
     }
 
     func testFetchMostRecentWeather() {
-        let mostRecentWeatherSequence = try! weatherRepository.fetchMostRecentWeather()
+        let mostRecentWeatherSequence = try! weatherRepository.fetchMostRecentWeather(skipLocal: false)
             .toBlocking()
             .toArray()
 

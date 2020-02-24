@@ -133,9 +133,9 @@ extension WeatherViewModel: WeatherQueryable {
             .disposed(by: bag)
     }
 
-    func fetchMostRecentWeather() {
+    func fetchMostRecentWeather(skipLocal: Bool) {
         isLoading.accept(true)
-        repository.fetchMostRecentWeather()
+        repository.fetchMostRecentWeather(skipLocal: skipLocal)
             .subscribe(
                 onNext: { weather in
                     self.weather.accept(weather)
