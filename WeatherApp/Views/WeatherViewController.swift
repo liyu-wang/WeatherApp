@@ -59,6 +59,7 @@ private extension WeatherViewController {
                 onNext: { [weak self] _ in
                     guard let self = self else { return }
                     let weatherListVC = WeatherListViewController.instantiate()
+                    weatherListVC.weatherQueryable = self.viewModel
                     self.navigationController?.pushViewController(weatherListVC, animated: true)
                 }
             )

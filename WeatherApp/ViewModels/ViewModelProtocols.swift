@@ -33,11 +33,12 @@ protocol WeatherQueryable {
     func fetchWeather(byZip zip: String, country: String)
     func fetchWeatherByGPS()
     func fetchMostRecentWeather(skipLocal: Bool)
+    func fetchWeather(byId id: Int, startWithLocalCopy: Bool)
 }
 
 // MARK: - WeatherListViewModelType
 
-typealias WeatherListViewModelType = WeatherListEmitable & WeatherListFetchable & WeatherListEditable
+typealias WeatherListViewModelType = WeatherListEmitable & WeatherListFetchable & WeatherListEditable & WeatherIndexable
 
 protocol WeatherListEmitable {
     var weatherListObservable: Observable<[Weather]> { get }
@@ -49,4 +50,8 @@ protocol WeatherListFetchable {
 
 protocol WeatherListEditable {
     func delete(weather: Weather)
+}
+
+protocol WeatherIndexable {
+    func weather(at indexPath: IndexPath) -> Weather
 }

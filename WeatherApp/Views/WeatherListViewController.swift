@@ -14,6 +14,7 @@ class WeatherListViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
 
     var viewModel: WeatherListViewModelType! = WeatherListViewModel()
+    var weatherQueryable: WeatherQueryable?
 
     private let bag = DisposeBag()
 
@@ -43,6 +44,7 @@ private extension WeatherListViewController {
         viewModel.weatherListObservable
             .bind(to: tableView.rx.items(cellIdentifier: "WeatherTableViewCell", cellType: UITableViewCell.self)) { (row, weather, cell) in
                 cell.textLabel?.text = "\(weather.name), \(weather.country)"
+                cell.accessoryType = .detailButton
             }
             .disposed(by: bag)
 
@@ -58,8 +60,19 @@ private extension WeatherListViewController {
             .subscribe(
                 onNext: { [weak self] w in
                     guard let self = self else { return }
+                    self.weatherQueryable?.fetchWeather(byId: w.id, startWithLocalCopy: true)
+                    self.navigationController?.popViewController(animated: true)
+                }
+            )
+            .disposed(by: bag)
+
+        tableView.rx.itemAccessoryButtonTapped
+            .subscribe(
+                onNext: { [weak self] ip in
+                    guard let self = self else { return }
+                    let weather = self.viewModel.weather(at: ip)
                     let mapVC = MapViewController.instantiate()
-                    mapVC.viewModel = MapViewModel(weather: w)
+                    mapVC.viewModel = MapViewModel(weather: weather)
                     self.navigationController?.pushViewController(mapVC, animated: true)
                 }
             )

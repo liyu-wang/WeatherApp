@@ -41,3 +41,9 @@ extension WeatherListViewModel: WeatherListEditable {
         repository.delete(weather: weather)
     }
 }
+
+extension WeatherListViewModel: WeatherIndexable {
+    func weather(at indexPath: IndexPath) -> Weather {
+        return weatherList.value[indexPath.row]
+    }
+}

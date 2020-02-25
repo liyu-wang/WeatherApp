@@ -149,4 +149,21 @@ extension WeatherViewModel: WeatherQueryable {
             )
             .disposed(by: bag)
     }
+
+    func fetchWeather(byId id: Int, startWithLocalCopy: Bool) {
+        isLoading.accept(true)
+        repository.fetchWeather(byId: id, startWithLocalCopy: startWithLocalCopy)
+            .subscribe(
+                onNext: { weather in
+                    self.weather.accept(weather)
+                },
+                onError: { error in
+                    self.error.accept(error)
+                },
+                onDisposed: {
+                    self.isLoading.accept(false)
+                }
+            )
+            .disposed(by: bag)
+    }
 }
