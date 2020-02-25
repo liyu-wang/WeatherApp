@@ -14,15 +14,15 @@ import RealmSwift
 import RxRealm
 @testable import WeatherApp
 
-class WeatherRepositoryTests<Store: AbstractStore>: XCTestCase where Store.Entity == Weather {
+class WeatherRepositoryTests: XCTestCase {
     var weatherService: WeatherServiceType!
-    fileprivate var weatherStore: Store!
+    fileprivate var weatherStore: MockWeatherStore!
     var weatherRepository: WeatherRepositoryType!
 
     override func setUp() {
         super.setUp()
         weatherService = MockWeatherService()
-        weatherStore = MockWeatherStore() as? Store
+        weatherStore = MockWeatherStore()
         weatherRepository = WeatherRepository(weatherStore: weatherStore, weatherService: weatherService)
     }
 

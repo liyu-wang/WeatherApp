@@ -24,12 +24,12 @@ private extension Weather {
     }
 }
 
-class WeatherStoreTests<Store: AbstractStore>: XCTestCase where Store.Entity == Weather {
-    var weatherStore: Store!
+class WeatherStoreTests: XCTestCase {
+    var weatherStore: RealmStore<Weather>!
 
     override func setUp() {
         super.setUp()
-        weatherStore = RealmStore<Weather>() as? Store
+        weatherStore = RealmStore<Weather>()
         Realm.Configuration.defaultConfiguration.inMemoryIdentifier = "testdb"
     }
 
@@ -79,26 +79,26 @@ class WeatherStoreTests<Store: AbstractStore>: XCTestCase where Store.Entity == 
         var result = RealmManager.realm!.objects(Weather.self)
         XCTAssert(result.count == 0, "Expected to have 0 weather in db.")
         let weather = Weather(id: 2643743, name: "London", condition: "Clouds", timestamp: Date())
-        weatherStore.add(entity: weather)
+        _ = weatherStore.add(entity: weather)
         result = RealmManager.realm!.objects(Weather.self)
         XCTAssert(result.count == 1, "Expected to have 1 weather in db.")
     }
 
     func testUpdateWeather() {
         let weather = Weather(id: 2643743, name: "London", condition: "Clouds", timestamp: Date())
-        weatherStore.add(entity: weather)
+        _ = weatherStore.add(entity: weather)
         let newWeatherFromApi = Weather(id: 2643743, name: "London", condition: "Sunny", timestamp: Date())
-        weatherStore.update(entity: newWeatherFromApi)
+        _ = weatherStore.update(entity: newWeatherFromApi)
         let weatherFromDB = RealmManager.realm!.object(ofType: Weather.self, forPrimaryKey: 2643743)
         XCTAssert(weatherFromDB?.condition == "Sunny", "Expected the codition updated to Sunny")
     }
 
     func testDeleteWeather() {
         let weather = Weather(id: 2643743, name: "London", condition: "Clouds", timestamp: Date())
-        weatherStore.add(entity: weather)
+        _ = weatherStore.add(entity: weather)
         var result = RealmManager.realm!.objects(Weather.self)
         XCTAssert(result.count == 1, "Expected to have 1 weather in db.")
-        weatherStore.delete(entity: weather)
+        _ = weatherStore.delete(entity: weather)
         result = RealmManager.realm!.objects(Weather.self)
         XCTAssert(result.count == 0, "Expected to have 0 weather in db.")
     }
