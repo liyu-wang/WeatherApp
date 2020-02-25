@@ -11,12 +11,15 @@ import RxSwift
 import RxCocoa
 
 class MapViewModel {
-    var weatherDriver: Driver<Weather> {
-        return weather.asDriver()
-    }
     private let weather: BehaviorRelay<Weather>
 
     init(weather: Weather) {
         self.weather = BehaviorRelay<Weather>(value: weather)
+    }
+}
+
+extension MapViewModel: WeatherEmitable {
+    var weatherDriver: Driver<Weather> {
+        return weather.asDriver()
     }
 }

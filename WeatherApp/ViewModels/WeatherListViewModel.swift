@@ -11,27 +11,39 @@ import RxSwift
 import RxCocoa
 
 struct WeatherListViewModel {
-    var weatherListObservable: Observable<[Weather]> {
-        return weatherList.asObservable()
-    }
     private let weatherList: BehaviorRelay<[Weather]>
-
     private let repository: WeatherRepositoryType
     private let bag = DisposeBag()
 
-    init(repository: WeatherRepositoryType = WeatherRepository()) {
+    init(repository: WeatherRepositoryType = WeatherRepository(weatherStore: RealmStore<Weather>())) {
         self.repository = repository
         weatherList = BehaviorRelay(value: [])
         fetchAllLocalWeathers()
     }
+}
 
+extension WeatherListViewModel: WeatherListEmitable {
+    var weatherListObservable: Observable<[Weather]> {
+        return weatherList.asObservable()
+    }
+}
+
+extension WeatherListViewModel: WeatherListFetchable {
     func fetchAllLocalWeathers() {
         repository.fetchAllLocalWeathers()
             .bind(to: weatherList)
             .disposed(by: bag)
     }
+}
 
+extension WeatherListViewModel: WeatherListEditable {
     func delete(weather: Weather) {
         repository.delete(weather: weather)
+    }
+}
+
+extension WeatherListViewModel: WeatherIndexable {
+    func weather(at indexPath: IndexPath) -> Weather {
+        return weatherList.value[indexPath.row]
     }
 }

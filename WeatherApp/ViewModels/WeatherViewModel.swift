@@ -16,29 +16,45 @@ private struct Constants {
 }
 
 struct WeatherViewModel {
-    var isLoadingDriver: Driver<Bool> {
-        return isLoading.asDriver()
-    }
-    var errorObservable: Observable<Error> {
-        return error.asObservable()
-    }
-    var weatherDrive: Driver<Weather> {
-        return weather.asDriver()
-    }
     private let isLoading: BehaviorRelay<Bool>
+    private let hasLoaded: BehaviorRelay<Bool>
     private let error: PublishRelay<Error>
     private let weather: BehaviorRelay<Weather>
     private let bag = DisposeBag()
-
     private let repository: WeatherRepositoryType
 
-    init(repository: WeatherRepositoryType = WeatherRepository()) {
+    init(repository: WeatherRepositoryType = WeatherRepository(weatherStore: RealmStore<Weather>())) {
         self.repository = repository
         error = PublishRelay()
         isLoading = BehaviorRelay(value: false)
+        hasLoaded = BehaviorRelay(value: false)
         weather = BehaviorRelay(value: Weather.emptyWeather)
     }
+}
 
+extension WeatherViewModel: LoadingStatusEmitable {
+    var isLoadingDriver: Driver<Bool> {
+        return isLoading.asDriver()
+    }
+
+    var hasLoadedDriver: Driver<Bool> {
+        return hasLoaded.asDriver()
+    }
+}
+
+extension WeatherViewModel: ErrorEmitable {
+    var errorObservable: Observable<Error> {
+        return error.asObservable()
+    }
+}
+
+extension WeatherViewModel: WeatherEmitable {
+    var weatherDriver: Driver<Weather> {
+        return weather.asDriver()
+    }
+}
+
+extension WeatherViewModel: WeatherQueryable {
     func fetchWeather(text: String) {
         if text.containsNumbers() {
             let array = text.components(separatedBy: Constants.zipFormatSeparator)
@@ -117,9 +133,26 @@ struct WeatherViewModel {
             .disposed(by: bag)
     }
 
-    func fetchMostRecentWeather() {
+    func fetchMostRecentWeather(skipLocal: Bool) {
         isLoading.accept(true)
-        repository.fetchMostRecentWeather()
+        repository.fetchMostRecentWeather(skipLocal: skipLocal)
+            .subscribe(
+                onNext: { weather in
+                    self.weather.accept(weather)
+                },
+                onError: { error in
+                    self.error.accept(error)
+                },
+                onDisposed: {
+                    self.isLoading.accept(false)
+                }
+            )
+            .disposed(by: bag)
+    }
+
+    func fetchWeather(byId id: Int, startWithLocalCopy: Bool) {
+        isLoading.accept(true)
+        repository.fetchWeather(byId: id, startWithLocalCopy: startWithLocalCopy)
             .subscribe(
                 onNext: { weather in
                     self.weather.accept(weather)

@@ -31,7 +31,7 @@ class WeatherViewModelTests: XCTestCase {
         viewModel = WeatherViewModel(repository: MockWeatherRepository())
 
         let weatherObserver = scheduler.createObserver(Weather?.self)
-        viewModel.weatherDrive
+        viewModel.weatherDriver
             .drive(weatherObserver)
             .disposed(by: bag)
         scheduler.start()
@@ -45,7 +45,7 @@ class WeatherViewModelTests: XCTestCase {
         viewModel = WeatherViewModel(repository: MockWeatherRepository())
 
         let weatherObserver = scheduler.createObserver(Weather?.self)
-        viewModel.weatherDrive
+        viewModel.weatherDriver
             .drive(weatherObserver)
             .disposed(by: bag)
         scheduler.start()
@@ -59,12 +59,12 @@ class WeatherViewModelTests: XCTestCase {
         viewModel = WeatherViewModel(repository: MockWeatherRepository())
 
         let weatherObserver = scheduler.createObserver(Weather?.self)
-        viewModel.weatherDrive
+        viewModel.weatherDriver
             .drive(weatherObserver)
             .disposed(by: bag)
         scheduler.start()
 
-        viewModel.fetchMostRecentWeather()
+        viewModel.fetchMostRecentWeather(skipLocal: false)
 
         XCTAssertRecordedElements(weatherObserver.events, [Weather.emptyWeather, TestDataSet.localWeatherLondon, TestDataSet.remoteWeatherLondon])
     }
