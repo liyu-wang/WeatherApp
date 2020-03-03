@@ -10,7 +10,7 @@ target 'WeatherApp' do
   pod 'RxCocoa', '~> 5'
   pod 'RealmSwift'
   pod 'RxRealm'
-  pod 'Kingfisher', '~> 5.12.0'
+#  pod 'Kingfisher', '~> 5.12.0'
 
   target 'WeatherAppTests' do
     inherit! :search_paths
