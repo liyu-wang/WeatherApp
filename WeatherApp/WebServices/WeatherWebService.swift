@@ -17,33 +17,29 @@ protocol WeatherWebServiceType {
 }
 
 struct WeatherWebService: WeatherWebServiceType {
-    private let service: Service<WeatherRequest>
+    private let service: Service<WeatherAPI>
 
-    init(service: Service<WeatherRequest> = Service<WeatherRequest>()) {
+    init(service: Service<WeatherAPI> = Service<WeatherAPI>()) {
         self.service = service
     }
 
     func fetchWeather(byCityName name: String) -> Single<Weather> {
-        let request = FetchWeatherByCityNameRequest(q: name)
-        return service.makeAPICall(.fetchWeatherByName(request), for: WeatherServiceData.self)
+        return service.makeAPICall(.fetchWeather(["q": name]), for: WeatherServiceData.self)
             .map { Weather(from: $0) }
     }
 
     func fetchWeather(byZip zip: String, countryCode: String) -> Single<Weather> {
-        let request = FetchWeatherByZipRequest(zip: "\(zip),\(countryCode)")
-        return service.makeAPICall(.fetchWeatherByZip(request), for: WeatherServiceData.self)
+        return service.makeAPICall(.fetchWeather(["zip": "\(zip),\(countryCode)"]), for: WeatherServiceData.self)
             .map { Weather(from: $0) }
     }
 
     func fetchWeather(byLatitude latitude: Double, longitude: Double) -> Single<Weather> {
-        let request = FetchWeatherByCoordinatesRequest(lat: latitude, lon: longitude)
-        return service.makeAPICall(.fetchWeatherByCoordinates(request), for: WeatherServiceData.self)
+        return service.makeAPICall(.fetchWeather(["lat": latitude, "lon": longitude]), for: WeatherServiceData.self)
             .map { Weather(from: $0) }
     }
 
     func fetchWeather(byId id: Int) -> Single<Weather> {
-        let request = FetchWeatherByIdRequest(id: id)
-        return service.makeAPICall(.fetchWeatherById(request), for: WeatherServiceData.self)
+        return service.makeAPICall(.fetchWeather(["id": id]), for: WeatherServiceData.self)
             .map { Weather(from: $0) }
     }
 }
