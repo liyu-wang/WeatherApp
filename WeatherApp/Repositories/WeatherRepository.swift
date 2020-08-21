@@ -22,9 +22,9 @@ protocol WeatherRepositoryType {
 
 struct WeatherRepository<Store: AbstractStore>: WeatherRepositoryType where Store.Entity == Weather {
     private let weatherStore: Store
-    private let weatherService: WeatherServiceType
+    private let weatherService: WeatherWebServiceType
 
-    init(weatherStore: Store, weatherService: WeatherServiceType = WeatherService()) {
+    init(weatherStore: Store, weatherService: WeatherWebServiceType = WeatherWebService()) {
         self.weatherStore = weatherStore
         self.weatherService = weatherService
     }
