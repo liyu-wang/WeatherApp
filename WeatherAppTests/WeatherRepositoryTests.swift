@@ -15,7 +15,7 @@ import RxRealm
 @testable import WeatherApp
 
 class WeatherRepositoryTests: XCTestCase {
-    var weatherService: WeatherServiceType!
+    var weatherService: WeatherWebServiceType!
     fileprivate var weatherStore: MockWeatherStore!
     var weatherRepository: WeatherRepositoryType!
 
@@ -109,7 +109,7 @@ class WeatherRepositoryTests: XCTestCase {
     }
 }
 
-private struct MockWeatherService: WeatherServiceType {
+private struct MockWeatherService: WeatherWebServiceType {
     func fetchWeather(byCityName name: String) -> Single<Weather> {
         return Single.just(TestDataSet.remoteWeatherMountainView)
     }
