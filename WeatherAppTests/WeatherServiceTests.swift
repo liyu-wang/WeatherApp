@@ -13,11 +13,11 @@ import RxBlocking
 @testable import WeatherApp
 
 class WeatherServiceTests: XCTestCase {
-    var weatherService: WeatherServiceType!
+    var weatherService: WeatherWebServiceType!
 
     override func setUp() {
         super.setUp()
-        weatherService = WeatherService()
+        weatherService = WeatherWebService()
     }
 
     override func tearDown() {
