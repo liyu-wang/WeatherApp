@@ -15,13 +15,33 @@ import RxRealm
 @testable import WeatherApp
 
 private extension Weather {
-    convenience init(id: Int, name: String, condition: String, timestamp: Date) {
-        self.init()
-        self.id = id
-        self.name = name
-        self.condition = condition
-        self.timestamp = timestamp
-    }
+    static let testInstance = Weather(uid: "2643743",
+                                      name: "London",
+                                      country: "GB",
+                                      latitude: -0.13,
+                                      longitude: 51.51,
+                                      dateTime: Date(timeIntervalSince1970: 1485789600),
+                                      condition: "Clouds",
+                                      iconStr: "04d",
+                                      temperature: 9.62,
+                                      tempMin: 8.33,
+                                      tempMax: 11,
+                                      humidity: 76,
+                                      timestamp: Date())
+
+    static let testInstance2 = Weather(uid: "1851632",
+                                      name: "Shuzenji",
+                                      country: "JP",
+                                      latitude: 139,
+                                      longitude: 35,
+                                      dateTime: Date(timeIntervalSince1970: 1560350192),
+                                      condition: "Clear",
+                                      iconStr: "01n",
+                                      temperature: 18,
+                                      tempMin: 13,
+                                      tempMax: 21,
+                                      humidity: 80,
+                                      timestamp: Date())
 }
 
 class WeatherStoreTests: XCTestCase {
@@ -30,7 +50,7 @@ class WeatherStoreTests: XCTestCase {
     override func setUp() {
         super.setUp()
         weatherStore = RealmStore<Weather>()
-        Realm.Configuration.defaultConfiguration.inMemoryIdentifier = "testdb"
+        Realm.Configuration.defaultConfiguration.inMemoryIdentifier = self.name
     }
 
     override func tearDown() {
@@ -39,10 +59,9 @@ class WeatherStoreTests: XCTestCase {
     }
 
     func insertTestWeathers() {
-        let weatherData = WeatherServiceData(id: 2643743, name: "London", dt: 1577971310, sys: WeatherServiceData.SysInfo(country: "UK"), coord: WeatherServiceData.Coordinators(lon: -0.13, lat: 51.51), weather: [WeatherServiceData.Weather(main: "Clouds", icon: "04d")], main: WeatherServiceData.MainInfo(temp: 9.62, tempMin: 8.33, tempMax: 11, humidity: 76))
-        // weather1 has timestamp -> Date()
-        let weather1 = Weather(from: weatherData)
-        let weather2 = Weather(id: 1851632, name: "Shuzenji", condition: "Windy", timestamp: Date().addingTimeInterval(10))
+//        let weatherData1 = WeatherResponseData(id: 2643743, name: "London", dt: 1577971310, sys: WeatherResponseData.SysInfo(country: "UK"), coord: WeatherResponseData.Coordinators(lon: -0.13, lat: 51.51), weather: [WeatherResponseData.Weather(main: "Clouds", icon: "04d")], main: WeatherResponseData.MainInfo(temp: 9.62, tempMin: 8.33, tempMax: 11, humidity: 76))
+        let weather1 = Weather.testInstance.asRealmModel()
+        let weather2 = Weather.testInstance2.asRealmModel()
         RealmManager.write { realm in
             realm.add(weather1)
             realm.add(weather2)
@@ -62,7 +81,7 @@ class WeatherStoreTests: XCTestCase {
     func testFindById() {
         insertTestWeathers()
 
-        let result = weatherStore.find(by: 1851632)
+        let result = weatherStore.find(by: "1851632")
             .toBlocking()
             .materialize()
 
@@ -76,30 +95,40 @@ class WeatherStoreTests: XCTestCase {
     }
 
     func testAddWeather() {
-        var result = RealmManager.realm!.objects(Weather.self)
+        var result = RealmManager.realm!.objects(RMWeather.self)
         XCTAssert(result.count == 0, "Expected to have 0 weather in db.")
-        let weather = Weather(id: 2643743, name: "London", condition: "Clouds", timestamp: Date())
-        _ = weatherStore.add(entity: weather)
-        result = RealmManager.realm!.objects(Weather.self)
+        _ = weatherStore.add(entity: Weather.testInstance)
+        result = RealmManager.realm!.objects(RMWeather.self)
         XCTAssert(result.count == 1, "Expected to have 1 weather in db.")
     }
 
     func testUpdateWeather() {
-        let weather = Weather(id: 2643743, name: "London", condition: "Clouds", timestamp: Date())
-        _ = weatherStore.add(entity: weather)
-        let newWeatherFromApi = Weather(id: 2643743, name: "London", condition: "Sunny", timestamp: Date())
+        _ = weatherStore.add(entity: Weather.testInstance)
+        let newWeatherFromApi = Weather(uid: "2643743",
+                                        name: "London",
+                                        country: "GB",
+                                        latitude: -0.13,
+                                        longitude: 51.51,
+                                        dateTime: Date(timeIntervalSince1970: 1485789600),
+                                        condition: "Sunny",
+                                        iconStr: "04d",
+                                        temperature: 12,
+                                        tempMin: 6,
+                                        tempMax: 16,
+                                        humidity: 90,
+                                        timestamp: Date())
         _ = weatherStore.update(entity: newWeatherFromApi)
-        let weatherFromDB = RealmManager.realm!.object(ofType: Weather.self, forPrimaryKey: 2643743)
+        let weatherFromDB = RealmManager.realm!.object(ofType: RMWeather.self, forPrimaryKey: "2643743")
         XCTAssert(weatherFromDB?.condition == "Sunny", "Expected the codition updated to Sunny")
     }
 
     func testDeleteWeather() {
-        let weather = Weather(id: 2643743, name: "London", condition: "Clouds", timestamp: Date())
+        let weather = Weather.testInstance
         _ = weatherStore.add(entity: weather)
-        var result = RealmManager.realm!.objects(Weather.self)
+        var result = RealmManager.realm!.objects(RMWeather.self)
         XCTAssert(result.count == 1, "Expected to have 1 weather in db.")
         _ = weatherStore.delete(entity: weather)
-        result = RealmManager.realm!.objects(Weather.self)
+        result = RealmManager.realm!.objects(RMWeather.self)
         XCTAssert(result.count == 0, "Expected to have 0 weather in db.")
     }
 }

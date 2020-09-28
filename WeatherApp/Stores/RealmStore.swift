@@ -11,11 +11,19 @@ import RxSwift
 import RealmSwift
 import RxRealm
 
+struct SortKey {
+    let keyPath: String
+    let ascending: Bool
+}
+
+protocol SortableByTime {
+    static var timeSortKey: SortKey { get }
+}
+
 protocol AbstractStore {
     associatedtype Entity
-    func fetchMostRecentEntity() -> Maybe<Entity>
-    func fetchAll() -> Observable<[Entity]>
-    func find(by id: Int) -> Maybe<Entity>
+    func fetchAll(sortKey: SortKey?) -> Observable<[Entity]>
+    func find(by id: String) -> Maybe<Entity>
     @discardableResult
     func add(entity: Entity) -> Observable<Void>
     @discardableResult
@@ -26,52 +34,60 @@ protocol AbstractStore {
     func delete(entity: Entity) -> Observable<Void>
 }
 
-struct RealmStore<E: Object>: AbstractStore {
-    func fetchMostRecentEntity() -> Maybe<E> {
+extension AbstractStore where Entity: RealmModelRepresentable & SortableByTime, Entity == Entity.RealmModelType.DomainModelType, Entity.RealmModelType: Object {
+    func fetchMostRecentEntity(sortKey: SortKey?) -> Maybe<Entity> {
         guard let realm = RealmManager.realm else { return Maybe.error(StoreError.failedToInitDBInstance) }
-        if let entity = realm.objects(E.self).sorted(byKeyPath: "timestamp", ascending: false).first {
-            return Maybe.just(entity)
+        let timeSortKey = Entity.timeSortKey
+        if let entity = realm.objects(Entity.RealmModelType.self).sorted(byKeyPath: timeSortKey.keyPath, ascending: timeSortKey.ascending).first {
+            return Maybe.just(entity.asDomainModel())
         } else {
             return Maybe.empty()
         }
     }
+}
 
-    func fetchAll() -> Observable<[E]> {
+struct RealmStore<T: RealmModelRepresentable>: AbstractStore where T == T.RealmModelType.DomainModelType, T.RealmModelType: Object {
+    func fetchAll(sortKey: SortKey? = nil) -> Observable<[T]> {
         guard let realm = RealmManager.realm else { return Observable.error(StoreError.failedToInitDBInstance) }
-        let result = realm.objects(E.self).sorted(byKeyPath: "timestamp", ascending: false)
-        return Observable.array(from: result)
+        var result = realm.objects(T.RealmModelType.self)
+        if let sort = sortKey {
+            result = result.sorted(byKeyPath: sort.keyPath, ascending: sort.ascending)
+        }
+        return Observable.array(from: result).mapToDomainModels()
     }
 
-    func find(by id: Int) -> Maybe<E> {
+    func find(by id: String) -> Maybe<T> {
         guard let realm = RealmManager.realm else { return Maybe.error(StoreError.failedToInitDBInstance) }
-        if let entity = realm.object(ofType: E.self, forPrimaryKey: id) {
-            return Maybe.just(entity)
+        if let entity = realm.object(ofType: T.RealmModelType.self, forPrimaryKey: id) {
+            return Maybe.just(entity.asDomainModel())
         } else {
             return Maybe.empty()
         }
     }
 
-    func add(entity: E) -> Observable<Void> {
+    func add(entity: T) -> Observable<Void> {
         return RealmManager.write { realm in
-            realm.add(entity)
+            realm.add(entity.asRealmModel())
         }
     }
 
-    func addOrUpdate(entity: E) -> Observable<Void> {
+    func addOrUpdate(entity: T) -> Observable<Void> {
         return RealmManager.write { realm in
-            realm.add(entity, update: .modified)
+            realm.add(entity.asRealmModel(), update: .modified)
         }
     }
 
-    func update(entity: E) -> Observable<Void> {
+    func update(entity: T) -> Observable<Void> {
         return RealmManager.write { realm in
-            realm.add(entity, update: .modified)
+            realm.add(entity.asRealmModel(), update: .modified)
         }
     }
 
-    func delete(entity: E) -> Observable<Void> {
+    func delete(entity: T) -> Observable<Void> {
+        guard let realm = RealmManager.realm else { return Observable.error(StoreError.failedToInitDBInstance) }
+        guard let object = realm.object(ofType: T.RealmModelType.self, forPrimaryKey: entity.uid) else { fatalError() }
         return RealmManager.write { realm in
-            realm.delete(entity)
+            realm.delete(object)
         }
     }
 }

@@ -65,7 +65,7 @@ class WeatherServiceTests: XCTestCase {
     }
 
     func testFetchWeatherByIdSuccess() {
-        let result = weatherService.fetchWeather(byId: 2172797)
+        let result = weatherService.fetchWeather(byId: "2172797")
             .toBlocking()
             .materialize()
 

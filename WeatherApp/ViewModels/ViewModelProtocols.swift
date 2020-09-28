@@ -33,7 +33,7 @@ protocol WeatherQueryable {
     func fetchWeather(byZip zip: String, country: String)
     func fetchWeatherByGPS()
     func fetchMostRecentWeather(skipLocal: Bool)
-    func fetchWeather(byId id: Int, startWithLocalCopy: Bool)
+    func fetchWeather(byId id: String, startWithLocalCopy: Bool)
 }
 
 // MARK: - WeatherListViewModelType

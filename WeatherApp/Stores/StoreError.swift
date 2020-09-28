@@ -11,7 +11,7 @@ import Foundation
 enum StoreError: Error {
     case failedToInitDBInstance
     case failedToWriteDB(error: Error)
-    case entityWithSpecifiedIdNotExist(id: Int)
+    case entityWithSpecifiedIdNotExist(id: String)
 }
 
 extension StoreError: LocalizedError {
