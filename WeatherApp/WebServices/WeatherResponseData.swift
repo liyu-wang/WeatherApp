@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct WeatherServiceData: Decodable {
+struct WeatherResponseData: Decodable {
     let id: Int
     let name: String
     let dt: Int
