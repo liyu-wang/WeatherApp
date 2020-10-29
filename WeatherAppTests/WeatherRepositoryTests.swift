@@ -52,6 +52,7 @@ class WeatherRepositoryTests: XCTestCase {
     func testFetchWeatherByName() {
         let weathersObserver = testScheduler.createObserver([Weather].self)
         weatherRepository.fetchAllLocalWeathers() // by default sort by timestamp, descending
+            .observeOn(SerialDispatchQueueScheduler.init(qos: .userInitiated))
             .bind(to: weathersObserver)
             .disposed(by: bag)
         testScheduler.start()
@@ -80,6 +81,7 @@ class WeatherRepositoryTests: XCTestCase {
     func testFetchWeatherByZip() {
         let weathersObserver = testScheduler.createObserver([Weather].self)
         weatherRepository.fetchAllLocalWeathers() // by default sort by timestamp, descending
+            .observeOn(SerialDispatchQueueScheduler.init(qos: .userInitiated))
             .bind(to: weathersObserver)
             .disposed(by: bag)
         testScheduler.start()
@@ -108,6 +110,7 @@ class WeatherRepositoryTests: XCTestCase {
     func testFetchAllLocalWeathers() {
         let weathersObserver = testScheduler.createObserver([Weather].self)
         weatherRepository.fetchAllLocalWeathers() // by default sort by timestamp, descending
+            .observeOn(SerialDispatchQueueScheduler.init(qos: .userInitiated))
             .bind(to: weathersObserver)
             .disposed(by: bag)
         testScheduler.start()
@@ -135,6 +138,7 @@ class WeatherRepositoryTests: XCTestCase {
     func testFetchWeatherById() {
         let weathersObserver = testScheduler.createObserver([Weather].self)
         weatherRepository.fetchAllLocalWeathers() // by default sort by timestamp, descending
+            .observeOn(SerialDispatchQueueScheduler.init(qos: .userInitiated))
             .bind(to: weathersObserver)
             .disposed(by: bag)
         testScheduler.start()
