@@ -17,7 +17,11 @@ default_platform(:ios)
 
 platform :ios do
   desc "Description of what the lane does"
-  lane :custom_lane do
+  lane :test do
     # add actions here: https://docs.fastlane.tools/actions
+    # scan
+    run_tests(workspace: "WeatherApp.xcworkspace",
+            devices: ["iPhone 12"],
+            scheme: "WeatherApp")
   end
 end
