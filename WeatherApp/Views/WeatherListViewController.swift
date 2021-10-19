@@ -60,7 +60,7 @@ private extension WeatherListViewController {
             .subscribe(
                 onNext: { [weak self] w in
                     guard let self = self else { return }
-                    self.weatherQueryable?.fetchWeather(byId: w.id, startWithLocalCopy: true)
+                    self.weatherQueryable?.fetchWeather(byId: w.uid, startWithLocalCopy: true)
                     self.navigationController?.popViewController(animated: true)
                 }
             )

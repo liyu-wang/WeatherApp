@@ -6,17 +6,17 @@ target 'WeatherApp' do
   use_frameworks!
 
   # Pods for WeatherApp
-  pod 'RxSwift', '~> 5'
-  pod 'RxCocoa', '~> 5'
-  pod 'RealmSwift'
-  pod 'RxRealm'
+  pod 'RxSwift', '~> 6'
+  pod 'RxCocoa', '~> 6'
+  pod 'RealmSwift', '~> 10'
+  pod 'RxRealm', '~> 5'
   pod 'Kingfisher', '~> 5.12.0'
 
   target 'WeatherAppTests' do
     inherit! :search_paths
     # Pods for testing
-    pod 'RxTest', '~> 5'
-    pod 'RxBlocking', '~> 5'
+    pod 'RxTest', '~> 6'
+    pod 'RxBlocking', '~> 6'
   end
 
 end

@@ -35,7 +35,7 @@ class MockWeatherRepository: WeatherRepositoryType {
 
     func delete(weather: Weather) -> Observable<Void> {
         guard let i = localWeatherArray.firstIndex(of: weather) else {
-            return Observable.error(StoreError.entityWithSpecifiedIdNotExist(id: weather.id))
+            return Observable.error(StoreError.entityWithSpecifiedIdNotExist(id: weather.uid))
         }
         localWeatherArray.remove(at: i)
         weathers.accept(localWeatherArray)
@@ -54,8 +54,8 @@ class MockWeatherRepository: WeatherRepositoryType {
         return Single.just(TestDataSet.remoteWeatherLondon)
     }
 
-    func fetchWeather(byId id: Int, startWithLocalCopy: Bool) -> Observable<Weather> {
-        guard id == TestDataSet.localWeatherLondon.id else { return Observable.error(StoreError.entityWithSpecifiedIdNotExist(id: id)) }
+    func fetchWeather(byId id: String, startWithLocalCopy: Bool) -> Observable<Weather> {
+        guard id == TestDataSet.localWeatherLondon.uid else { return Observable.error(StoreError.entityWithSpecifiedIdNotExist(id: id)) }
         guard startWithLocalCopy else {
             return Observable.just(TestDataSet.remoteWeatherLondon)
         }

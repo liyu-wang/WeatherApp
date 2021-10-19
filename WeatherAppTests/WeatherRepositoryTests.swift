@@ -10,71 +10,119 @@ import XCTest
 import RxSwift
 import RxCocoa
 import RxBlocking
+import RxTest
 import RealmSwift
 import RxRealm
 @testable import WeatherApp
 
 class WeatherRepositoryTests: XCTestCase {
-    var weatherService: WeatherServiceType!
-    fileprivate var weatherStore: MockWeatherStore!
+    var bag: DisposeBag!
+    var testScheduler: TestScheduler!
+    var weatherService: WeatherWebServiceType!
+    var weatherStore: RealmStore<Weather>!
     var weatherRepository: WeatherRepositoryType!
 
     override func setUp() {
         super.setUp()
+        Realm.Configuration.defaultConfiguration.inMemoryIdentifier = self.name
+        bag = DisposeBag()
+        testScheduler = TestScheduler(initialClock: 0)
         weatherService = MockWeatherService()
-        weatherStore = MockWeatherStore()
+        weatherStore = RealmStore<Weather>()
         weatherRepository = WeatherRepository(weatherStore: weatherStore, weatherService: weatherService)
+        prepareDB()
     }
 
     override func tearDown() {
+        bag = nil
+        testScheduler = nil
         weatherRepository = nil
+        weatherStore = nil
+        weatherService = nil
         super.tearDown()
     }
 
+    private func prepareDB() {
+        RealmManager.write { realm in
+            realm.add(TestDataSet.localWeatherShuzenji.asRealmModel())
+            realm.add(TestDataSet.localWeatherLondon.asRealmModel())
+        }
+    }
+
     func testFetchWeatherByName() {
+        let weathersObserver = testScheduler.createObserver([Weather].self)
+        weatherRepository.fetchAllLocalWeathers() // by default sort by timestamp, descending
+            .observeOn(SerialDispatchQueueScheduler.init(qos: .userInitiated))
+            .bind(to: weathersObserver)
+            .disposed(by: bag)
+        testScheduler.start()
+
         // fetch weather does not exist in local db
         let result = try! weatherRepository.fetchWeather(byCityName: "Mountain View")
             .toBlocking()
             .toArray()
-        XCTAssert(result.count == 1, "Expected to get 1 remote wearther back, but got \(result.count) back.")
+        XCTAssert(result.count == 1, "Expected to get 1 remote weather back, but got \(result.count) back.")
 
-        let localWeathers = try!weatherRepository.fetchAllLocalWeathers()
-            .toBlocking()
-            .toArray()
-        XCTAssert(localWeathers[0].count == 3, "Expected to get 3 local wearthers back, but got \(localWeathers[0].count) back.")
+        Thread.sleep(forTimeInterval: 1)
+
+        XCTAssertRecordedElements(weathersObserver.events, [
+            [
+                TestDataSet.localWeatherLondon,
+                TestDataSet.localWeatherShuzenji
+            ],
+            [
+                TestDataSet.remoteWeatherMountainView,
+                TestDataSet.localWeatherLondon,
+                TestDataSet.localWeatherShuzenji
+            ]
+        ])
     }
 
     func testFetchWeatherByZip() {
+        let weathersObserver = testScheduler.createObserver([Weather].self)
+        weatherRepository.fetchAllLocalWeathers() // by default sort by timestamp, descending
+            .observeOn(SerialDispatchQueueScheduler.init(qos: .userInitiated))
+            .bind(to: weathersObserver)
+            .disposed(by: bag)
+        testScheduler.start()
+
         // fetch weather does not exist in local db
         let result = try! weatherRepository.fetchWeather(byZip: "94035", countryCode: "US")
             .toBlocking()
             .toArray()
-        XCTAssert(result.count == 1, "Expected to get 1 remote wearther back, but got \(result.count) back.")
+        XCTAssert(result.count == 1, "Expected to get 1 remote weather back, but got \(result.count) back.")
 
-        let localWeathers = try!weatherRepository.fetchAllLocalWeathers()
-            .toBlocking()
-            .toArray()
-        XCTAssert(localWeathers[0].count == 3, "Expected to get 3 local wearthers back, but got \(localWeathers[0].count) back.")
-    }
+        Thread.sleep(forTimeInterval: 1)
 
-    func testFetchWeatherByCoordinates() {
-        // fetch weather does not exist in local db
-        let result = try! weatherRepository.fetchWeather(byLatitude: -122.08, longitude: 37.39)
-            .toBlocking()
-            .toArray()
-        XCTAssert(result.count == 1, "Expected to get 1 remote wearther back, but got \(result.count) back.")
-
-        let localWeathers = try!weatherRepository.fetchAllLocalWeathers()
-            .toBlocking()
-            .toArray()
-        XCTAssert(localWeathers[0].count == 3, "Expected to get 3 local wearthers back, but got \(localWeathers[0].count) back.")
+        XCTAssertRecordedElements(weathersObserver.events, [
+            [
+                TestDataSet.localWeatherLondon,
+                TestDataSet.localWeatherShuzenji
+            ],
+            [
+                TestDataSet.remoteWeatherMountainView,
+                TestDataSet.localWeatherLondon,
+                TestDataSet.localWeatherShuzenji
+            ]
+        ])
     }
 
     func testFetchAllLocalWeathers() {
-        let localWeathers = try!weatherRepository.fetchAllLocalWeathers()
-            .toBlocking()
-            .toArray()
-        XCTAssert(localWeathers[0].count == 2, "Expected to get 2 local wearthers back, but got \(localWeathers[0].count) back.")
+        let weathersObserver = testScheduler.createObserver([Weather].self)
+        weatherRepository.fetchAllLocalWeathers() // by default sort by timestamp, descending
+            .observeOn(SerialDispatchQueueScheduler.init(qos: .userInitiated))
+            .bind(to: weathersObserver)
+            .disposed(by: bag)
+        testScheduler.start()
+
+        Thread.sleep(forTimeInterval: 1)
+
+        XCTAssertRecordedElements(weathersObserver.events, [
+            [
+                TestDataSet.localWeatherLondon,
+                TestDataSet.localWeatherShuzenji
+            ]
+        ])
     }
 
     func testFetchMostRecentWeather() {
@@ -88,28 +136,39 @@ class WeatherRepositoryTests: XCTestCase {
     }
 
     func testFetchWeatherById() {
-        var localWeathers = try! weatherRepository.fetchAllLocalWeathers()
-            .toBlocking()
-            .toArray()
-        XCTAssert(localWeathers[0].count == 2, "Expected to get 2 local wearthers back, but got \(localWeathers[0].count) back.")
+        let weathersObserver = testScheduler.createObserver([Weather].self)
+        weatherRepository.fetchAllLocalWeathers() // by default sort by timestamp, descending
+            .observeOn(SerialDispatchQueueScheduler.init(qos: .userInitiated))
+            .bind(to: weathersObserver)
+            .disposed(by: bag)
+        testScheduler.start()
 
         // fetch weather does exist in local db
-        let weatherSequence = try! weatherRepository.fetchWeather(byId: 2643743, startWithLocalCopy: true)
+        let weatherSequence = try! weatherRepository.fetchWeather(byId: "2643743", startWithLocalCopy: true)
             .toBlocking()
             .toArray()
 
-        XCTAssert(weatherSequence.count == 2, "Expected to get 1 local weather and 1 remote wearther back, but got \(weatherSequence.count) back.")
+        XCTAssert(weatherSequence.count == 2, "Expected to get 1 local weather and 1 remote weather back, but got \(weatherSequence.count) back.")
 
-        XCTAssert(weatherSequence[0].dateTime! < weatherSequence[1].dateTime!, "Expected to the remote wearther has large datetime than the local one")
+        XCTAssert(weatherSequence[0].dateTime! < weatherSequence[1].dateTime!, "Expected to the remote weather has large datetime than the local one")
 
-        localWeathers = try! weatherRepository.fetchAllLocalWeathers()
-            .toBlocking()
-            .toArray()
-        XCTAssert(localWeathers[0].count == 2, "Expected to get 2 local wearthers back, but got \(localWeathers[0].count) back.")
+        Thread.sleep(forTimeInterval: 1)
+
+        // the new remote weather should override the old local weather in the db
+        XCTAssertRecordedElements(weathersObserver.events, [
+            [
+                TestDataSet.localWeatherLondon,
+                TestDataSet.localWeatherShuzenji
+            ],
+            [
+                TestDataSet.remoteWeatherLondon,
+                TestDataSet.localWeatherShuzenji
+            ]
+        ])
     }
 }
 
-private struct MockWeatherService: WeatherServiceType {
+private struct MockWeatherService: WeatherWebServiceType {
     func fetchWeather(byCityName name: String) -> Single<Weather> {
         return Single.just(TestDataSet.remoteWeatherMountainView)
     }
@@ -122,26 +181,27 @@ private struct MockWeatherService: WeatherServiceType {
         return Single.just(TestDataSet.remoteWeatherMountainView)
     }
 
-    func fetchWeather(byId id: Int) -> Single<Weather> {
+    func fetchWeather(byId id: String) -> Single<Weather> {
         return Single.just(TestDataSet.remoteWeatherLondon)
     }
 }
 
+/*
 private class MockWeatherStore: AbstractStore {
     private var dict = [
-        TestDataSet.localWeatherLondon.id : TestDataSet.localWeatherLondon,
-        TestDataSet.localWeatherShuzenji.id: TestDataSet.localWeatherShuzenji
+        TestDataSet.localWeatherLondon.uid : TestDataSet.localWeatherLondon,
+        TestDataSet.localWeatherShuzenji.uid: TestDataSet.localWeatherShuzenji
     ]
 
-    func fetchMostRecentEntity() -> Maybe<Weather> {
+    func fetchMostRecentEntity(sortKey: SortKey?) -> Maybe<Weather> {
         return Maybe.just(TestDataSet.localWeatherLondon)
     }
 
-    func fetchAll() -> Observable<[Weather]> {
+    func fetchAll(sortKey: SortKey?) -> Observable<[Weather]> {
         return Observable.just(Array(dict.values))
     }
 
-    func find(by id: Int) -> Maybe<Weather> {
+    func find(by id: String) -> Maybe<Weather> {
         if let w = dict[id] {
             return Maybe.just(w)
         } else {
@@ -151,12 +211,12 @@ private class MockWeatherStore: AbstractStore {
 
     @discardableResult
     func add(entity: Weather) -> Observable<Void> {
-        dict[entity.id] = entity
+        dict[entity.uid] = entity
         return Observable.just(())
     }
 
     func addOrUpdate(entity: Weather) -> Observable<Void> {
-        guard let w = dict[entity.id] else {
+        guard let w = dict[entity.uid] else {
             add(entity: entity)
             return Observable.just(())
         }
@@ -175,3 +235,4 @@ private class MockWeatherStore: AbstractStore {
         return Observable.just(())
     }
 }
+*/

@@ -86,7 +86,7 @@ extension WeatherViewModel: WeatherQueryable {
                     self.weather.accept(weather)
                     self.isLoading.accept(false)
                 },
-                onError: { error in
+                onFailure: { error in
                     self.error.accept(error)
                     self.isLoading.accept(false)
                 }
@@ -102,7 +102,7 @@ extension WeatherViewModel: WeatherQueryable {
                     self.weather.accept(weather)
                     self.isLoading.accept(false)
                 },
-                onError: { error in
+                onFailure: { error in
                     self.error.accept(error)
                     self.isLoading.accept(false)
                 }
@@ -150,7 +150,7 @@ extension WeatherViewModel: WeatherQueryable {
             .disposed(by: bag)
     }
 
-    func fetchWeather(byId id: Int, startWithLocalCopy: Bool) {
+    func fetchWeather(byId id: String, startWithLocalCopy: Bool) {
         isLoading.accept(true)
         repository.fetchWeather(byId: id, startWithLocalCopy: startWithLocalCopy)
             .subscribe(
