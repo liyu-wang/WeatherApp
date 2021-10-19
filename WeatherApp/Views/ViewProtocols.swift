@@ -63,12 +63,12 @@ protocol ErrorObserver: AnyObject, DisposeBagManagedObserver {
 extension ErrorObserver where Self: UIViewController {
     func bindError() {
         errorEmitable.errorObservable
-        .observeOn(MainScheduler.instance)
-        .subscribe(
-            onNext: { [weak self] error in
-                self?.showAlert(for: error)
-            }
-        )
-        .disposed(by: bag)
+            .observe(on: MainScheduler.instance)
+            .subscribe(
+                onNext: { [weak self] error in
+                    self?.showAlert(for: error)
+                }
+            )
+            .disposed(by: bag)
     }
 }
